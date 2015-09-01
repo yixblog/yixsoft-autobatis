@@ -23,4 +23,10 @@ public @interface AutoSql {
      * @return datasource id in spring
      */
     String datasource() default "";
+
+    /**
+     * the dialect name to use.keep null to use the default dialect in configuation
+     * @return dialect name
+     */
+    String dialect() default "";
 }
