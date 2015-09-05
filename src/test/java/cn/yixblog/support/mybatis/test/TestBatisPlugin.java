@@ -3,6 +3,7 @@ package cn.yixblog.support.mybatis.test;
 import cn.yixblog.support.mybatis.autosql.dialects.mysql.mappers.DescMySqlTableMapper;
 import cn.yixblog.support.mybatis.test.mappers.BasicLogMapper;
 import com.alibaba.fastjson.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,13 +25,14 @@ public class TestBatisPlugin {
     private DescMySqlTableMapper tableMapper;
     @Test
     public void validPlugin(){
+        JSONObject itm = logMapper.findOne("111","11");
+        assert itm!=null;
         List<JSONObject> list = logMapper.list();
         assert !list.isEmpty();
-        JSONObject itm = logMapper.findOne("111");
-        assert itm!=null;
     }
 
     @Test
+    @Ignore
     public void testDesc(){
         List<JSONObject> logColumns = tableMapper.descTable("sys_log");
         assert !logColumns.isEmpty();

@@ -263,14 +263,6 @@ public class YixMapperScannerConfigurer implements BeanDefinitionRegistryPostPro
         scanner.setMapperFactoryBean(new YixMapperFactoryBean());
         scanner.registerFilters();
         scanner.scan(StringUtils.tokenizeToStringArray(this.basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS));
-        registerAutoSqlMappers();
-    }
-
-    private void registerAutoSqlMappers() {
-        List<IAutoSqlFactoryBean> beans = MapperFactoryBeanCache.getInstance().getAll();
-        for (IAutoSqlFactoryBean bean : beans) {
-            bean.attachAutoSqlStatements();
-        }
     }
 
     /*

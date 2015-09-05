@@ -2,6 +2,7 @@ package cn.yixblog.support.mybatis.autosql.configuration.support.spring;
 
 import cn.yixblog.support.mybatis.exceptions.ApplicationContextNotReadyException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class ApplicationContextHelper {
     }
 
     public static String resolvePattern(String pattern){
-        return ctx.getEnvironment().resolvePlaceholders(pattern);
+        return ((GenericApplicationContext)ctx).getBeanFactory().resolveEmbeddedValue(pattern);
     }
 
 }

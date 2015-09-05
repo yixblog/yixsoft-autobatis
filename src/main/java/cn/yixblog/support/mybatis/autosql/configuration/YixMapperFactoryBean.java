@@ -22,7 +22,7 @@ public class YixMapperFactoryBean extends MapperFactoryBean implements IAutoSqlF
     @Override
     protected void checkDaoConfig() {
         super.checkDaoConfig();
-        MapperFactoryBeanCache.getInstance().add(this);
+        attachAutoSqlStatements();
     }
 
     @Override
