@@ -1,10 +1,7 @@
 package cn.yixblog.support.mybatis.autosql.configuration.support.spring;
 
 import cn.yixblog.support.mybatis.exceptions.ApplicationContextNotReadyException;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -12,9 +9,12 @@ import java.util.Map;
  * support java bean out of spring applicationContext get beans from spring
  * Created by yixian on 2015-09-02.
  */
-@Component
-public class ApplicationContextHelper implements ApplicationContextAware {
+public class ApplicationContextHelper {
     private static ApplicationContext ctx;
+
+    public static void setApplicationContext(ApplicationContext context){
+        ctx = context;
+    }
 
     public static <T> Map<String, T> getBeansOfType(Class<T> type) {
         if (ctx == null) {
@@ -37,8 +37,8 @@ public class ApplicationContextHelper implements ApplicationContextAware {
         return ctx.getBean(type);
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        ctx = applicationContext;
+    public static String resolvePattern(String pattern){
+        return ctx.getEnvironment().resolvePlaceholders(pattern);
     }
+
 }

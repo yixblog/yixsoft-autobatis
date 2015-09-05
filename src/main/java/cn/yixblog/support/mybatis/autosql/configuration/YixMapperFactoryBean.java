@@ -3,9 +3,7 @@ package cn.yixblog.support.mybatis.autosql.configuration;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoMapper;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoSql;
 import cn.yixblog.support.mybatis.autosql.configuration.sqlsource.AutoSqlSource;
-import cn.yixblog.support.mybatis.autosql.configuration.support.IMapperFactoryBeanCache;
 import cn.yixblog.support.mybatis.autosql.configuration.support.impls.MapperFactoryBeanCache;
-import cn.yixblog.support.mybatis.autosql.configuration.support.spring.ApplicationContextHelper;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -24,7 +22,7 @@ public class YixMapperFactoryBean extends MapperFactoryBean implements IAutoSqlF
     @Override
     protected void checkDaoConfig() {
         super.checkDaoConfig();
-        ApplicationContextHelper.getBean(IMapperFactoryBeanCache.class).add(this);
+        MapperFactoryBeanCache.getInstance().add(this);
     }
 
     @Override

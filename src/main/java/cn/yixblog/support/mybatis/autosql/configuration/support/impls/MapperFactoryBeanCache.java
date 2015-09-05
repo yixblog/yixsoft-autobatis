@@ -2,7 +2,6 @@ package cn.yixblog.support.mybatis.autosql.configuration.support.impls;
 
 import cn.yixblog.support.mybatis.autosql.configuration.IAutoSqlFactoryBean;
 import cn.yixblog.support.mybatis.autosql.configuration.support.IMapperFactoryBeanCache;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +12,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * caching mapper factory beans while initializing
  * Created by yixian on 2015-09-01.
  */
-@Component
 public class MapperFactoryBeanCache implements IMapperFactoryBeanCache {
     private Queue<IAutoSqlFactoryBean> factoryBeans;
-    private static IMapperFactoryBeanCache instance;
+    private static IMapperFactoryBeanCache instance = new MapperFactoryBeanCache();
 
-    public MapperFactoryBeanCache() {
-        instance = this;
+    private MapperFactoryBeanCache() {
         factoryBeans = new ConcurrentLinkedQueue<>();
     }
 

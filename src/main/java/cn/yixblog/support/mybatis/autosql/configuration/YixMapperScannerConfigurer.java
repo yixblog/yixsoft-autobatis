@@ -1,6 +1,7 @@
 package cn.yixblog.support.mybatis.autosql.configuration;
 
 import cn.yixblog.support.mybatis.autosql.configuration.support.impls.MapperFactoryBeanCache;
+import cn.yixblog.support.mybatis.autosql.configuration.support.spring.ApplicationContextHelper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.ClassPathMapperScanner;
@@ -247,6 +248,7 @@ public class YixMapperScannerConfigurer implements BeanDefinitionRegistryPostPro
         if (this.processPropertyPlaceHolders) {
             processPropertyPlaceHolders();
         }
+        ApplicationContextHelper.setApplicationContext(applicationContext);
 
         ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);
         scanner.setAddToConfig(this.addToConfig);
@@ -261,6 +263,7 @@ public class YixMapperScannerConfigurer implements BeanDefinitionRegistryPostPro
         scanner.setMapperFactoryBean(new YixMapperFactoryBean());
         scanner.registerFilters();
         scanner.scan(StringUtils.tokenizeToStringArray(this.basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS));
+        registerAutoSqlMappers();
     }
 
     private void registerAutoSqlMappers() {
