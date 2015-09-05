@@ -19,12 +19,6 @@ public @interface AutoMapper {
     String[] pkName() default {"pkid"};
 
     /**
-     * if there are multipart datasources,use this property as the datasource id
-     * @return datasource id in spring
-     */
-    String datasource() default "";
-
-    /**
      * the dialect name to use.keep null to use the default dialect in configuation
      * @return dialect name
      */

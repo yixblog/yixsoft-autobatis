@@ -1,6 +1,8 @@
 package cn.yixblog.support.mybatis.test.mappers;
 
 import cn.yixblog.support.mybatis.autosql.annotations.AutoMapper;
+import cn.yixblog.support.mybatis.autosql.annotations.AutoSql;
+import cn.yixblog.support.mybatis.autosql.annotations.SqlType;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
@@ -10,7 +12,9 @@ import java.util.List;
  */
 @AutoMapper(tablename = "sys_log")
 public interface BasicLogMapper {
+    @AutoSql(type = SqlType.SELECT)
     List<JSONObject> list();
 
-    JSONObject findOne();
+    @AutoSql(type = SqlType.FIND_ONE)
+    JSONObject findOne(String pkid);
 }

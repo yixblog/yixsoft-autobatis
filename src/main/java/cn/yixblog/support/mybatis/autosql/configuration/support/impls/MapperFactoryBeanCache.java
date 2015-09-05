@@ -1,6 +1,7 @@
-package cn.yixblog.support.mybatis.autosql.configuration.support;
+package cn.yixblog.support.mybatis.autosql.configuration.support.impls;
 
 import cn.yixblog.support.mybatis.autosql.configuration.IAutoSqlFactoryBean;
+import cn.yixblog.support.mybatis.autosql.configuration.support.IMapperFactoryBeanCache;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,16 +15,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 @Component
 public class MapperFactoryBeanCache implements IMapperFactoryBeanCache {
-    private static IMapperFactoryBeanCache instance;
     private Queue<IAutoSqlFactoryBean> factoryBeans;
-
-    public static IMapperFactoryBeanCache getInstance() {
-        return instance;
-    }
+    private static IMapperFactoryBeanCache instance;
 
     public MapperFactoryBeanCache() {
-        factoryBeans = new ConcurrentLinkedQueue<>();
         instance = this;
+        factoryBeans = new ConcurrentLinkedQueue<>();
+    }
+
+    public static IMapperFactoryBeanCache getInstance(){
+        return instance;
     }
 
     @Override

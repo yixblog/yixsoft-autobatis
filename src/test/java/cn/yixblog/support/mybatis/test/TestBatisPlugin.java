@@ -26,7 +26,7 @@ public class TestBatisPlugin {
     public void validPlugin(){
         List<JSONObject> list = logMapper.list();
         assert !list.isEmpty();
-        JSONObject itm = logMapper.findOne();
+        JSONObject itm = logMapper.findOne("111");
         assert itm!=null;
     }
 

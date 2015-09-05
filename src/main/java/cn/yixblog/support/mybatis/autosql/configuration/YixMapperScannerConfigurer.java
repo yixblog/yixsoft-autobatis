@@ -1,5 +1,6 @@
 package cn.yixblog.support.mybatis.autosql.configuration;
 
+import cn.yixblog.support.mybatis.autosql.configuration.support.impls.MapperFactoryBeanCache;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.ClassPathMapperScanner;
@@ -23,6 +24,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.util.Assert.notNull;
@@ -259,6 +261,13 @@ public class YixMapperScannerConfigurer implements BeanDefinitionRegistryPostPro
         scanner.setMapperFactoryBean(new YixMapperFactoryBean());
         scanner.registerFilters();
         scanner.scan(StringUtils.tokenizeToStringArray(this.basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS));
+    }
+
+    private void registerAutoSqlMappers() {
+        List<IAutoSqlFactoryBean> beans = MapperFactoryBeanCache.getInstance().getAll();
+        for (IAutoSqlFactoryBean bean : beans) {
+            bean.attachAutoSqlStatements();
+        }
     }
 
     /*

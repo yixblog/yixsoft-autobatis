@@ -1,4 +1,4 @@
-package cn.yixblog.support.mybatis.lowercase;
+package cn.yixblog.support.mybatis.utils;
 
 import com.alibaba.fastjson.JSONObject;
 
