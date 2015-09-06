@@ -19,6 +19,7 @@
 
     <bean class="cn.yixblog.support.mybatis.autosql.configuration.YixMapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-        <property name="basePackage" value="cn.yixblog.support.mybatis.test.mappers,cn.yixblog.support.mybatis.autosql.dialects"/>
+        <property name="basePackage" value="cn.yixblog.support.mybatis.test.mappers"/>
     </bean>
+
 </beans>

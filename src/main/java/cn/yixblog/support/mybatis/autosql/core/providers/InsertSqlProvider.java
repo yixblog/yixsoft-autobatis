@@ -6,7 +6,9 @@ import cn.yixblog.support.mybatis.autosql.dialects.ColumnInfo;
 import cn.yixblog.support.mybatis.autosql.pk.IPrimaryKeyProvider;
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
@@ -28,10 +30,14 @@ public class InsertSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
     }
 
     private void attachValues(JSONObject param) {
+        Set<String> usedKeySet = new HashSet<>();
         for (Map.Entry<String, Object> paramItem : param.entrySet()) {
             ColumnInfo info;
-            if ((info = getTableColumnMap().get(paramItem.getKey().toLowerCase())) != null) {
-                VALUES(getDialect().escapeKeyword(info.getColumn()), paramItem.getValue() == null ? "null" : "#{" + paramItem.getKey() + "}");
+            String key = paramItem.getKey();
+            if ((info = getTableColumnMap().get(key.toLowerCase())) != null && !usedKeySet.contains(key.toLowerCase())) {
+                VALUES(getDialect().escapeKeyword(info.getColumn()), paramItem.getValue() == null ? "null" : "#{" + key + "}");
+                //in case the object has multiple key references to same column(because key in map is case sensitive)
+                usedKeySet.add(key.toLowerCase());
             }
         }
     }

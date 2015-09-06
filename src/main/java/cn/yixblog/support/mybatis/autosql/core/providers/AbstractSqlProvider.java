@@ -74,10 +74,14 @@ public abstract class AbstractSqlProvider implements IAutoSqlProvider {
         if (param == null) {
             return;
         }
+        Set<String> usedKeySet = new HashSet<>();
         for (Map.Entry<String, Object> entry : param.entrySet()) {
             ColumnInfo columnInfo;
-            if ((columnInfo = tableColumnMap.get(entry.getKey().toLowerCase())) != null) {
-                WHERE(buildParamCondition(columnInfo, entry.getKey(), entry.getValue()));
+            String key = entry.getKey();
+            if ((columnInfo = tableColumnMap.get(key.toLowerCase())) != null && !usedKeySet.contains(key.toLowerCase())) {
+                WHERE(buildParamCondition(columnInfo, key, entry.getValue()));
+                //in case the object has multiple key references to same column(because key in map is case sensitive)
+                usedKeySet.add(key.toLowerCase());
             }
         }
     }

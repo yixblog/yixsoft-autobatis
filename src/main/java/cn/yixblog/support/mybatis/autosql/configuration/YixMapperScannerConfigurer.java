@@ -1,6 +1,5 @@
 package cn.yixblog.support.mybatis.autosql.configuration;
 
-import cn.yixblog.support.mybatis.autosql.configuration.support.impls.MapperFactoryBeanCache;
 import cn.yixblog.support.mybatis.autosql.configuration.support.spring.ApplicationContextHelper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -25,7 +24,6 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.util.Assert.notNull;
@@ -77,7 +75,8 @@ public class YixMapperScannerConfigurer implements BeanDefinitionRegistryPostPro
      * @param basePackage base package name
      */
     public void setBasePackage(String basePackage) {
-        this.basePackage = basePackage;
+        final String dialectMapperPackage = "cn.yixblog.support.mybatis.autosql.dialects.*.mappers";
+        this.basePackage = basePackage + "," + dialectMapperPackage;
     }
 
     /**
