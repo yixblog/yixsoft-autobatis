@@ -22,6 +22,8 @@ public class LowercaseMapResultHandler implements ResultHandler {
         if (obj instanceof JSONObject) {
             JSONObject item = LowerMapUtils.lowercase((JSONObject) obj);
             result.add(item);
+        }else {
+            result.add(obj);
         }
     }
 

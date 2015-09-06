@@ -3,11 +3,14 @@ package cn.yixblog.support.mybatis.test;
 import cn.yixblog.support.mybatis.autosql.dialects.mysql.mappers.DescMySqlTableMapper;
 import cn.yixblog.support.mybatis.test.mappers.BasicLogMapper;
 import com.alibaba.fastjson.JSONObject;
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.List;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
+@TransactionConfiguration
 public class TestBatisPlugin {
     @Resource
     private BasicLogMapper logMapper;
@@ -25,16 +29,14 @@ public class TestBatisPlugin {
     private DescMySqlTableMapper tableMapper;
     @Test
     public void validPlugin(){
-        JSONObject itm = logMapper.findOne("111","11");
+        JSONObject itm = logMapper.findOne("aba");
         assert itm!=null;
-        List<JSONObject> list = logMapper.list();
+        JSONObject params = new JSONObject();
+        params.put("userid","1");
+        PageList<JSONObject> list = logMapper.list(params, new PageBounds(1,10));
         assert !list.isEmpty();
+        Integer count= logMapper.count(params);
+        assert count==2;
     }
 
-    @Test
-    @Ignore
-    public void testDesc(){
-        List<JSONObject> logColumns = tableMapper.descTable("sys_log");
-        assert !logColumns.isEmpty();
-    }
 }

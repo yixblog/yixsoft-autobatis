@@ -52,10 +52,11 @@ public class SqlGenerationConfig {
         Class<? extends IAutoSqlProvider> providerType = type.getProviderClass();
         try {
             IAutoSqlProvider provider = providerType.newInstance();
-            provider.setParameter(parameterObject);
+            provider.setPkNames(pkNames);
+            provider.setTable(tableName);
             provider.setTableColumns(tableColumns);
             provider.setDialect(manager.getDialect(dialectName));
-            provider.setPkNames(pkNames);
+            provider.setParameter(parameterObject);
             return provider;
         } catch (InstantiationException | IllegalAccessException e) {
             //as all sql provider was written by myself ,these exceptions shall never happen

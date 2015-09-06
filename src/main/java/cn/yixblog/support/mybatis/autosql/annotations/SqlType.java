@@ -1,10 +1,7 @@
 package cn.yixblog.support.mybatis.autosql.annotations;
 
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
-import cn.yixblog.support.mybatis.autosql.core.providers.DeleteSqlProvider;
-import cn.yixblog.support.mybatis.autosql.core.providers.InsertSqlProvider;
-import cn.yixblog.support.mybatis.autosql.core.providers.SelectSqlProvider;
-import cn.yixblog.support.mybatis.autosql.core.providers.UpdateSqlProvider;
+import cn.yixblog.support.mybatis.autosql.core.providers.*;
 import org.apache.ibatis.mapping.SqlCommandType;
 
 /**
@@ -15,8 +12,8 @@ public enum SqlType {
     INSERT(InsertSqlProvider.class, SqlCommandType.INSERT),
     UPDATE(UpdateSqlProvider.class, SqlCommandType.UPDATE),
     SELECT(SelectSqlProvider.class, SqlCommandType.SELECT),
-    FIND_ONE(SelectSqlProvider.class, SqlCommandType.SELECT),
-    DELETE(DeleteSqlProvider.class, SqlCommandType.DELETE);
+    DELETE(DeleteSqlProvider.class, SqlCommandType.DELETE),
+    COUNT(CountSqlProvider.class, SqlCommandType.SELECT);
 
     private Class<? extends IAutoSqlProvider> providerClass;
     private SqlCommandType commondType;

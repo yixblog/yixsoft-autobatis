@@ -2,8 +2,6 @@ package cn.yixblog.support.mybatis.autosql.core.providers;
 
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
 
-import java.util.List;
-
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 /**
@@ -15,7 +13,7 @@ public class CountSqlProvider extends AbstractSqlProvider implements IAutoSqlPro
     @Override
     public String getSql() {
         BEGIN();
-        SELECT("count(*)");
+        SELECT("count(*) total");
         FROM(getTableName());
         buildWhereClause();
         return SQL();

@@ -132,10 +132,6 @@ public abstract class AbstractSqlProvider implements IAutoSqlProvider {
         return tableColumnMap;
     }
 
-    protected Map<String, Object> getAdditionalParam() {
-        return additionalParam;
-    }
-
     protected String getTableName() {
         return dialect.escapeKeyword(tableName);
     }
