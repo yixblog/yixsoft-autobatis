@@ -12,12 +12,12 @@
         <repository>
             <id>yix_aliyun_nexus</id>
             <name>aliyun_nexus</name>
-            <url>http://www.yixblog.cn/nexus/content/repositories/releases</url>
+            <url>http://nexus.yixblog.cn/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
             <id>yix_aliyun_nexus</id>
             <name>aliyun nexus</name>
-            <url>http:///www.yixblog.cn/nexus/content/repositories/snapshots</url>
+            <url>http:///nexus.yixblog.cn/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
