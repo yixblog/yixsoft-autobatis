@@ -3,7 +3,6 @@ package cn.yixblog.support.mybatis.autosql.configuration;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoMapper;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoSql;
 import cn.yixblog.support.mybatis.autosql.configuration.sqlsource.AutoSqlSource;
-import cn.yixblog.support.mybatis.autosql.configuration.support.impls.MapperFactoryBeanCache;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.mybatis.spring.mapper.MapperFactoryBean;
