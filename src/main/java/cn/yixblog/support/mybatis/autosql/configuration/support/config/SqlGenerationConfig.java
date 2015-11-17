@@ -35,8 +35,8 @@ public class SqlGenerationConfig {
 
     public SqlGenerationConfig(String statementName, Method method) {
         statementId = statementName;
-        AutoSql autoSqlConfig = method.getDeclaredAnnotation(AutoSql.class);
-        AutoMapper autoMapperConfig = method.getDeclaringClass().getDeclaredAnnotation(AutoMapper.class);
+        AutoSql autoSqlConfig = method.getAnnotation(AutoSql.class);
+        AutoMapper autoMapperConfig = method.getDeclaringClass().getAnnotation(AutoMapper.class);
         pkNames = autoMapperConfig.pkName();
         tableName = autoMapperConfig.tablename();
         resultType = MapperMethodUtils.getReturnType(method);
