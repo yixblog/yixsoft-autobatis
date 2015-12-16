@@ -18,6 +18,7 @@ public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
 
     @Override
     public String getSql() {
+        BEGIN();
         UPDATE(getTableName());
         String[] pkNames = getPkNames();
         JSONObject param = getParam();
