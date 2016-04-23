@@ -6,9 +6,6 @@ import cn.yixblog.support.mybatis.autosql.annotations.SqlType;
 import com.alibaba.fastjson.JSONObject;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * Created by yixian on 2015-08-31.

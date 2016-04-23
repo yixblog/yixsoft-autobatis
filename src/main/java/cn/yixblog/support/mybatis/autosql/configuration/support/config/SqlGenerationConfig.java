@@ -1,11 +1,13 @@
 package cn.yixblog.support.mybatis.autosql.configuration.support.config;
 
+import cn.yixblog.support.mybatis.autosql.annotations.AdvanceSelect;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoMapper;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoSql;
 import cn.yixblog.support.mybatis.autosql.annotations.SqlType;
 import cn.yixblog.support.mybatis.autosql.configuration.support.dialect.SqlDialectManager;
 import cn.yixblog.support.mybatis.autosql.configuration.support.spring.ApplicationContextHelper;
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
+import cn.yixblog.support.mybatis.autosql.core.providers.SelectSqlProvider;
 import cn.yixblog.support.mybatis.autosql.dialects.ColumnInfo;
 import cn.yixblog.support.mybatis.autosql.dialects.ISqlDialect;
 import cn.yixblog.support.mybatis.utils.MapperMethodUtils;
@@ -28,6 +30,8 @@ public class SqlGenerationConfig {
     private final String tableName;
     private final String[] pkNames;
     private Map<String, ColumnInfo> tableColumns;
+    private final String[] excludeColumns;
+    private final String addonWhereClause;
     private final String dialectName;
     private final String statementId;
     private final Class resultType;
@@ -36,6 +40,14 @@ public class SqlGenerationConfig {
     public SqlGenerationConfig(String statementName, Method method) {
         statementId = statementName;
         AutoSql autoSqlConfig = method.getAnnotation(AutoSql.class);
+        AdvanceSelect advanceSelect = method.getAnnotation(AdvanceSelect.class);
+        if (advanceSelect != null) {
+            excludeColumns = advanceSelect.excludeColumns();
+            addonWhereClause = advanceSelect.addonWhereClause();
+        } else {
+            excludeColumns = null;
+            addonWhereClause = "";
+        }
         AutoMapper autoMapperConfig = method.getDeclaringClass().getAnnotation(AutoMapper.class);
         pkNames = autoMapperConfig.pkName();
         tableName = autoMapperConfig.tablename();
@@ -57,6 +69,10 @@ public class SqlGenerationConfig {
             provider.setTableColumns(tableColumns);
             provider.setDialect(manager.getDialect(dialectName));
             provider.setParameter(parameterObject);
+            if (provider instanceof SelectSqlProvider) {
+                ((SelectSqlProvider)provider).setExcludeColumns(excludeColumns);
+                ((SelectSqlProvider)provider).setAddonWhereClause(addonWhereClause);
+            }
             return provider;
         } catch (InstantiationException | IllegalAccessException e) {
             //as all sql provider was written by myself ,these exceptions shall never happen

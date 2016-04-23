@@ -1,6 +1,12 @@
 package cn.yixblog.support.mybatis.autosql.core.providers;
 
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
@@ -10,12 +16,32 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
  */
 public class SelectSqlProvider extends AbstractSqlProvider implements IAutoSqlProvider {
 
+    private String[] excludeColumns;
+    private String addonWhereClause;
+
     @Override
     public String getSql() {
         BEGIN();
-        SELECT("*");
+        if (ArrayUtils.isEmpty(excludeColumns)) {
+            SELECT("*");
+        } else {
+            Set<String> columns = getTableColumnMap().keySet();
+            columns.removeAll(new ArrayList<>(Arrays.asList(excludeColumns)));
+            SELECT(StringUtils.join(columns, ","));
+        }
         FROM(getTableName());
         buildWhereClause();
+        if (StringUtils.isNotEmpty(addonWhereClause)) {
+            WHERE(addonWhereClause);
+        }
         return SQL();
+    }
+
+    public void setExcludeColumns(String[] excludeColumns) {
+        this.excludeColumns = excludeColumns;
+    }
+
+    public void setAddonWhereClause(String addonWhereClause) {
+        this.addonWhereClause = addonWhereClause;
     }
 }
