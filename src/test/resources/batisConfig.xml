@@ -3,9 +3,9 @@
 <configuration>
 
     <plugins>
+        <plugin interceptor="cn.yixblog.support.mybatis.plugins.LowercaseJsonInterceptor"/>
         <plugin interceptor="com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor">
             <property name="dialectClass" value="com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect"/>
         </plugin>
-        <plugin interceptor="cn.yixblog.support.mybatis.plugins.LowercaseJsonInterceptor"/>
     </plugins>
 </configuration>

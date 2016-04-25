@@ -44,11 +44,16 @@ public class TestBatisPlugin {
         assert inserted!=null;
         assert "111".equals(inserted.getString("content"));
 
+        JSONObject demo = logMapper.findOneShort(newLogId);
+        assert demo==null;
+
         inserted.put("content","222");
         logMapper.update(inserted);
         inserted = logMapper.findOne(newLogId);
         assert "222".equals(inserted.getString("content"));
 
+        demo = logMapper.findOneShort(newLogId);
+        assert demo!=null && !demo.containsKey("content");
 
         logMapper.delete(newLogId);
         assert logMapper.findOne(newLogId)==null;

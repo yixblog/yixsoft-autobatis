@@ -1,5 +1,6 @@
 package cn.yixblog.support.mybatis.test.mappers;
 
+import cn.yixblog.support.mybatis.autosql.annotations.AdvanceSelect;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoMapper;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoSql;
 import cn.yixblog.support.mybatis.autosql.annotations.SqlType;
@@ -17,6 +18,10 @@ public interface BasicLogMapper {
 
     @AutoSql(type = SqlType.SELECT)
     JSONObject findOne(String pkid);
+
+    @AutoSql(type = SqlType.SELECT)
+    @AdvanceSelect(excludeColumns = {"content"},addonWhereClause = "content='222'")
+    JSONObject findOneShort(String pkid);
 
     @AutoSql(type = SqlType.COUNT)
     Integer count(JSONObject params);
