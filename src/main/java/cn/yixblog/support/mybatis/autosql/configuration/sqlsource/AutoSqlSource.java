@@ -1,11 +1,15 @@
 package cn.yixblog.support.mybatis.autosql.configuration.sqlsource;
 
 import cn.yixblog.support.mybatis.autosql.configuration.support.config.SqlGenerationConfig;
+import cn.yixblog.support.mybatis.autosql.configuration.support.spring.ApplicationContextHelper;
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
+import cn.yixblog.support.mybatis.autosql.pk.IPrimaryKeyProvider;
 import cn.yixblog.support.mybatis.utils.ResultMapUtils;
 import org.apache.ibatis.builder.SqlSourceBuilder;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
 
@@ -51,6 +55,12 @@ public class AutoSqlSource implements SqlSource {
     public MappedStatement createStatement() {
         MappedStatement.Builder builder = new MappedStatement.Builder(configuration, genConfig.getStatementId(), this, genConfig.getType());
         builder.resultMaps(ResultMapUtils.createJsonResultMap(configuration, genConfig.getStatementId(), genConfig.getResultType()));
+        String[] pkNames = genConfig.getPkNames();
+        if (genConfig.getType() == SqlCommandType.INSERT && pkNames.length == 1) {
+            builder.keyGenerator(genConfig.isPkAutoIncrement() ? new Jdbc3KeyGenerator() : ApplicationContextHelper.getBean(IPrimaryKeyProvider.class));
+            builder.keyProperty(pkNames[0]);
+            builder.keyColumn(pkNames[0]);
+        }
         return builder.build();
     }
 }

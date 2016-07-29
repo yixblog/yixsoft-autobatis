@@ -1,8 +1,14 @@
 package cn.yixblog.support.mybatis.autosql.pk;
 
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.ExecutorException;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.Configuration;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
+import java.sql.Statement;
 import java.util.UUID;
 
 /**
@@ -12,8 +18,28 @@ import java.util.UUID;
 @Component
 @Conditional(BeanExistsCondition.class)
 public class UUIDPkProvider implements IPrimaryKeyProvider {
+
     @Override
-    public String next() {
-        return UUID.randomUUID().toString();
+    public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+        String[] keyColumns = ms.getKeyColumns();
+        if (parameter != null && keyColumns.length == 1) {
+            final Configuration configuration = ms.getConfiguration();
+            final MetaObject metaParam = configuration.newMetaObject(parameter);
+            setValue(metaParam, keyColumns[0], UUID.randomUUID().toString());
+        }
+    }
+
+    @Override
+    public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+        //do nothing
+        System.out.println(parameter.getClass());
+    }
+
+    private void setValue(MetaObject metaParam, String property, Object value) {
+        if (metaParam.hasSetter(property)) {
+            metaParam.setValue(property, value);
+        } else {
+            throw new ExecutorException("No setter found for the keyProperty '" + property + "' in " + metaParam.getOriginalObject().getClass().getName() + ".");
+        }
     }
 }

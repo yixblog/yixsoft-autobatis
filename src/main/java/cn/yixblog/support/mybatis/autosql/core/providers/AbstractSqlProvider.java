@@ -22,6 +22,7 @@ public abstract class AbstractSqlProvider implements IAutoSqlProvider {
     private Map<String, ColumnInfo> tableColumnMap;
     private Map<String, Object> additionalParam = new HashMap<>();
     private String tableName;
+    private boolean pkAutoIncrement;
 
     @Override
     public void setParameter(Object parameterObject) {
@@ -66,6 +67,11 @@ public abstract class AbstractSqlProvider implements IAutoSqlProvider {
     }
 
     @Override
+    public void setPkAutoIncrement(boolean pkAutoIncrement) {
+        this.pkAutoIncrement= pkAutoIncrement;
+    }
+
+    @Override
     public void setTable(String tableName) {
         this.tableName = tableName;
     }
@@ -84,6 +90,10 @@ public abstract class AbstractSqlProvider implements IAutoSqlProvider {
                 usedKeySet.add(key.toLowerCase());
             }
         }
+    }
+
+    protected boolean isPkAutoIncrement() {
+        return pkAutoIncrement;
     }
 
     private String buildParamCondition(ColumnInfo columnInfo, String key, Object value) {

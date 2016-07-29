@@ -29,6 +29,7 @@ public class SqlGenerationConfig {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String tableName;
     private final String[] pkNames;
+    private final boolean pkAutoIncrement;
     private Map<String, ColumnInfo> tableColumns;
     private final String[] excludeColumns;
     private final String addonWhereClause;
@@ -50,6 +51,7 @@ public class SqlGenerationConfig {
         }
         AutoMapper autoMapperConfig = method.getDeclaringClass().getAnnotation(AutoMapper.class);
         pkNames = autoMapperConfig.pkName();
+        pkAutoIncrement = autoMapperConfig.pkAutoIncrement();
         tableName = autoMapperConfig.tablename();
         resultType = MapperMethodUtils.getReturnType(method);
         type = autoSqlConfig.type();
@@ -65,6 +67,7 @@ public class SqlGenerationConfig {
         try {
             IAutoSqlProvider provider = providerType.newInstance();
             provider.setPkNames(pkNames);
+            provider.setPkAutoIncrement(pkAutoIncrement);
             provider.setTable(tableName);
             provider.setTableColumns(tableColumns);
             provider.setDialect(manager.getDialect(dialectName));
@@ -89,6 +92,14 @@ public class SqlGenerationConfig {
             columnMap.put(col.getColumn().toLowerCase(), col);
         }
         tableColumns = columnMap;
+    }
+
+    public boolean isPkAutoIncrement() {
+        return pkAutoIncrement;
+    }
+
+    public String[] getPkNames() {
+        return pkNames;
     }
 
     public String getStatementId() {

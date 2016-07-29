@@ -19,6 +19,12 @@ public @interface AutoMapper {
     String[] pkName() default {"pkid"};
 
     /**
+     * if the primary key auto increment
+     * @return boolean value
+     */
+    boolean pkAutoIncrement() default false;
+
+    /**
      * the dialect name to use.keep null to use the default dialect in configuation
      * @return dialect name
      */

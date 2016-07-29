@@ -23,4 +23,6 @@ public interface IAutoSqlProvider {
     void setPkNames(String[] pkNames);
 
     void setTable(String tableName);
+
+    void setPkAutoIncrement(boolean pkAutoIncrement);
 }
