@@ -32,7 +32,7 @@ public class UUIDPkProvider implements IPrimaryKeyProvider {
     @Override
     public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
         //do nothing
-        System.out.println(parameter.getClass());
+//        System.out.println(parameter.getClass());
     }
 
     private void setValue(MetaObject metaParam, String property, Object value) {
