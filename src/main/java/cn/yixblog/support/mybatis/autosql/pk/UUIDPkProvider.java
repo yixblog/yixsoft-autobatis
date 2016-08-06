@@ -25,7 +25,9 @@ public class UUIDPkProvider implements IPrimaryKeyProvider {
         if (parameter != null && keyColumns.length == 1) {
             final Configuration configuration = ms.getConfiguration();
             final MetaObject metaParam = configuration.newMetaObject(parameter);
-            setValue(metaParam, keyColumns[0], UUID.randomUUID().toString());
+            if (metaParam.getValue(keyColumns[0])==null) {
+                setValue(metaParam, keyColumns[0], UUID.randomUUID().toString());
+            }
         }
     }
 
