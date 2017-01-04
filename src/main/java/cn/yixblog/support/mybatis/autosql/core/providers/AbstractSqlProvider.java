@@ -96,7 +96,7 @@ public abstract class AbstractSqlProvider implements IAutoSqlProvider {
         return pkAutoIncrement;
     }
 
-    private String buildParamCondition(ColumnInfo columnInfo, String key, Object value) {
+    protected String buildParamCondition(ColumnInfo columnInfo, String key, Object value) {
         StringBuilder builder = new StringBuilder(dialect.escapeKeyword(columnInfo.getColumn()));
         if (value == null) {
             builder.append(" is null");

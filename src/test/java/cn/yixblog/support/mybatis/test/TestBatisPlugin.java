@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * validate plugin
@@ -52,6 +53,7 @@ public class TestBatisPlugin {
         assert demo == null;
 
         inserted.put("content", "222");
+        inserted.put("id", Arrays.asList(newLogId));
         logMapper.update(inserted);
         inserted = logMapper.findOne(newLogId);
         assert "222".equals(inserted.getString("content"));
@@ -63,7 +65,7 @@ public class TestBatisPlugin {
         assert logMapper.findOne(newLogId) == null;
 
         JSONObject log2 = new JSONObject();
-        log2.put("name","hhh");
+        log2.put("name", "hhh");
         log2Mapper.save(log2);
         assert log2.getInteger("pkid") != null;
     }

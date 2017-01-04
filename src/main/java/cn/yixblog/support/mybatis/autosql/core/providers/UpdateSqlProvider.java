@@ -32,7 +32,7 @@ public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
                     if (paramItem.getValue() == null) {
                         throw new AutoSqlException("when building auto update sql,primary keys must not be null");
                     }
-                    whereClauses.add(getDialect().escapeKeyword(key.toUpperCase()) + "=#{" + key + "}");
+                    whereClauses.add(buildParamCondition(getTableColumnMap().get(key.toLowerCase()), key, paramItem.getValue()));
                 } else {
                     ColumnInfo info = getTableColumnMap().get(key.toLowerCase());
                     if (info == null) {
