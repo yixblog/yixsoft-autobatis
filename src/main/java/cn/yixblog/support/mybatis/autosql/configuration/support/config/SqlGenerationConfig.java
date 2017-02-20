@@ -7,6 +7,7 @@ import cn.yixblog.support.mybatis.autosql.annotations.SqlType;
 import cn.yixblog.support.mybatis.autosql.configuration.support.dialect.SqlDialectManager;
 import cn.yixblog.support.mybatis.autosql.configuration.support.spring.ApplicationContextHelper;
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
+import cn.yixblog.support.mybatis.autosql.core.providers.CountSqlProvider;
 import cn.yixblog.support.mybatis.autosql.core.providers.SelectSqlProvider;
 import cn.yixblog.support.mybatis.autosql.dialects.ColumnInfo;
 import cn.yixblog.support.mybatis.autosql.dialects.ISqlDialect;
@@ -75,7 +76,10 @@ public class SqlGenerationConfig {
             if (provider instanceof SelectSqlProvider) {
                 ((SelectSqlProvider)provider).setExcludeColumns(excludeColumns);
                 ((SelectSqlProvider)provider).setAddonWhereClause(addonWhereClause);
+            }else if (provider instanceof CountSqlProvider){
+                ((CountSqlProvider)provider).setAddonWhereClause(addonWhereClause);
             }
+
             return provider;
         } catch (InstantiationException | IllegalAccessException e) {
             //as all sql provider was written by myself ,these exceptions shall never happen

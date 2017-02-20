@@ -4,8 +4,8 @@ import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
 import cn.yixblog.support.mybatis.autosql.dialects.ColumnInfo;
 import cn.yixblog.support.mybatis.autosql.dialects.ISqlDialect;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 

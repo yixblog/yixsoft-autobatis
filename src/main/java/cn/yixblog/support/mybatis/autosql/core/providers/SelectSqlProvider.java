@@ -1,8 +1,8 @@
 package cn.yixblog.support.mybatis.autosql.core.providers;
 
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

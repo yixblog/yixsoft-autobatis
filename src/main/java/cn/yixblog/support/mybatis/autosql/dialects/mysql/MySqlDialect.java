@@ -4,7 +4,7 @@ import cn.yixblog.support.mybatis.autosql.dialects.ColumnInfo;
 import cn.yixblog.support.mybatis.autosql.dialects.ISqlDialect;
 import cn.yixblog.support.mybatis.autosql.dialects.mysql.mappers.DescMySqlTableMapper;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

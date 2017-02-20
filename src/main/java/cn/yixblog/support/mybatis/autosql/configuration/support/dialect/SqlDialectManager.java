@@ -3,9 +3,7 @@ package cn.yixblog.support.mybatis.autosql.configuration.support.dialect;
 import cn.yixblog.support.mybatis.autosql.configuration.support.ISqlDialectManager;
 import cn.yixblog.support.mybatis.autosql.configuration.support.spring.ApplicationContextHelper;
 import cn.yixblog.support.mybatis.autosql.dialects.ISqlDialect;
-import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.binding.MapperProxy;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
