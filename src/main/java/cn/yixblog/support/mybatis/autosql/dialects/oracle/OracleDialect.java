@@ -17,7 +17,6 @@ import java.util.List;
  */
 @Component
 public class OracleDialect implements ISqlDialect {
-    @Autowired(required = false)
     private OracleTableMapper oracleTableMapper;
 
     @Override
@@ -42,5 +41,11 @@ public class OracleDialect implements ISqlDialect {
     @Override
     public String escapeKeyword(String name) {
         return "\"" + name + "\"";
+    }
+
+    @Autowired(required = false)
+    public OracleDialect setOracleTableMapper(OracleTableMapper oracleTableMapper) {
+        this.oracleTableMapper = oracleTableMapper;
+        return this;
     }
 }

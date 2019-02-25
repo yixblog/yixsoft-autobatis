@@ -6,16 +6,16 @@ import cn.yixblog.support.mybatis.autosql.dialects.ISqlDialect;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.jdbc.SQL;
 
 import java.util.*;
 
-import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
 
 /**
  * global methods here
  * Created by yixian on 2015-09-05.
  */
-public abstract class AbstractSqlProvider implements IAutoSqlProvider {
+public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvider {
     private ISqlDialect dialect;
     private String[] pkNames;
     private JSONObject param;
@@ -23,6 +23,19 @@ public abstract class AbstractSqlProvider implements IAutoSqlProvider {
     private Map<String, Object> additionalParam = new HashMap<>();
     private String tableName;
     private boolean pkAutoIncrement;
+
+    private String builtSql;
+
+    @Override
+    public synchronized String getSql() {
+        if (builtSql != null) {
+            return builtSql;
+        }
+        builtSql = buildSql();
+        return builtSql;
+    }
+
+    protected abstract String buildSql();
 
     @Override
     public void setParameter(Object parameterObject) {
@@ -68,7 +81,7 @@ public abstract class AbstractSqlProvider implements IAutoSqlProvider {
 
     @Override
     public void setPkAutoIncrement(boolean pkAutoIncrement) {
-        this.pkAutoIncrement= pkAutoIncrement;
+        this.pkAutoIncrement = pkAutoIncrement;
     }
 
     @Override
@@ -149,4 +162,5 @@ public abstract class AbstractSqlProvider implements IAutoSqlProvider {
     protected String getTableName() {
         return dialect.escapeKeyword(tableName);
     }
+
 }

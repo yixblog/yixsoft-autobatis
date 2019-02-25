@@ -3,7 +3,6 @@ package cn.yixblog.support.mybatis.autosql.core.providers;
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
 import org.apache.commons.lang3.StringUtils;
 
-import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 /**
  * create count sql
@@ -14,15 +13,14 @@ public class CountSqlProvider extends AbstractSqlProvider implements IAutoSqlPro
     private String addonWhereClause;
 
     @Override
-    public String getSql() {
-        BEGIN();
+    protected String buildSql() {
         SELECT("count(*) total");
         FROM(getTableName());
         buildWhereClause();
         if (StringUtils.isNotEmpty(addonWhereClause)) {
             WHERE(addonWhereClause);
         }
-        return SQL();
+        return toString();
     }
 
     public void setAddonWhereClause(String addonWhereClause) {

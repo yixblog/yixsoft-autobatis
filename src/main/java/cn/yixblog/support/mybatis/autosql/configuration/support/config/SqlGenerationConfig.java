@@ -16,6 +16,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +67,7 @@ public class SqlGenerationConfig {
         }
         Class<? extends IAutoSqlProvider> providerType = type.getProviderClass();
         try {
-            IAutoSqlProvider provider = providerType.newInstance();
+            IAutoSqlProvider provider = providerType.getDeclaredConstructor().newInstance();
             provider.setPkNames(pkNames);
             provider.setPkAutoIncrement(pkAutoIncrement);
             provider.setTable(tableName);
@@ -74,14 +75,14 @@ public class SqlGenerationConfig {
             provider.setDialect(manager.getDialect(dialectName));
             provider.setParameter(parameterObject);
             if (provider instanceof SelectSqlProvider) {
-                ((SelectSqlProvider)provider).setExcludeColumns(excludeColumns);
-                ((SelectSqlProvider)provider).setAddonWhereClause(addonWhereClause);
-            }else if (provider instanceof CountSqlProvider){
-                ((CountSqlProvider)provider).setAddonWhereClause(addonWhereClause);
+                ((SelectSqlProvider) provider).setExcludeColumns(excludeColumns);
+                ((SelectSqlProvider) provider).setAddonWhereClause(addonWhereClause);
+            } else if (provider instanceof CountSqlProvider) {
+                ((CountSqlProvider) provider).setAddonWhereClause(addonWhereClause);
             }
 
             return provider;
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             //as all sql provider was written by myself ,these exceptions shall never happen
             logger.error(e.getMessage(), e);
             return null;

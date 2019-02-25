@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
-import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 /**
  * auto select sql builder
@@ -20,8 +19,7 @@ public class SelectSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
     private String addonWhereClause;
 
     @Override
-    public String getSql() {
-        BEGIN();
+    protected String buildSql() {
         if (ArrayUtils.isEmpty(excludeColumns)) {
             SELECT("*");
         } else {
@@ -34,7 +32,7 @@ public class SelectSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
         if (StringUtils.isNotEmpty(addonWhereClause)) {
             WHERE(addonWhereClause);
         }
-        return SQL();
+        return toString();
     }
 
     public void setExcludeColumns(String[] excludeColumns) {

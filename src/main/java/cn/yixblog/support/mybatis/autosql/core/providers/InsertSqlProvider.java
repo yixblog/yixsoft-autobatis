@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.apache.ibatis.jdbc.SqlBuilder.*;
-
 /**
  * sql builder for insert
  * Created by yixian on 2015-09-02.
@@ -17,12 +15,11 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 public class InsertSqlProvider extends AbstractSqlProvider implements IAutoSqlProvider {
 
     @Override
-    public String getSql() {
-        BEGIN();
+    protected String buildSql() {
         INSERT_INTO(getTableName());
         JSONObject param = getParam();
         attachValues(param);
-        return SQL();
+        return toString();
     }
 
     private void attachValues(JSONObject param) {

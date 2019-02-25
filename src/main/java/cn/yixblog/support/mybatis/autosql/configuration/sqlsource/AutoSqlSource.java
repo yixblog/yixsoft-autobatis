@@ -49,7 +49,7 @@ public class AutoSqlSource implements SqlSource {
     private SqlSource createSqlSource(Object parameterObject, IAutoSqlProvider provider) {
         SqlSourceBuilder parser = new SqlSourceBuilder(configuration);
         Class paramType = parameterObject == null ? Object.class : parameterObject.getClass();
-        return parser.parse(provider.getSql(), paramType, new HashMap<String, Object>());
+        return parser.parse(provider.getSql(), paramType, new HashMap<>());
     }
 
     public MappedStatement createStatement() {

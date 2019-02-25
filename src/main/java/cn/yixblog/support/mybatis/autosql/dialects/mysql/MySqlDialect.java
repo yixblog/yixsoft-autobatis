@@ -17,7 +17,6 @@ import java.util.List;
  */
 @Component
 public class MySqlDialect implements ISqlDialect {
-    @Autowired(required = false)
     private DescMySqlTableMapper tableMapper;
 
     @Override
@@ -42,5 +41,11 @@ public class MySqlDialect implements ISqlDialect {
     @Override
     public String escapeKeyword(String name) {
         return "`" + name + "`";
+    }
+
+    @Autowired(required = false)
+    public MySqlDialect setTableMapper(DescMySqlTableMapper tableMapper) {
+        this.tableMapper = tableMapper;
+        return this;
     }
 }

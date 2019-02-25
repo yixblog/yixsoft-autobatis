@@ -7,24 +7,24 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.annotation.Resource;
 import java.util.Arrays;
 
 /**
  * validate plugin
  * Created by yixian on 2015-08-31.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
-@TransactionConfiguration
+@Rollback
 public class TestBatisPlugin {
-    @Resource
+    @Autowired
     private BasicLogMapper logMapper;
-    @Resource
+    @Autowired
     private Log2Mapper log2Mapper;
 
     @Test

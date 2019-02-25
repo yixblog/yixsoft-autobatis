@@ -8,8 +8,6 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 
-import static org.apache.ibatis.jdbc.SqlBuilder.*;
-
 /**
  * auto update sql builder
  * Created by yixian on 2015-09-02.
@@ -17,8 +15,7 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlProvider {
 
     @Override
-    public String getSql() {
-        BEGIN();
+    protected String buildSql() {
         UPDATE(getTableName());
         String[] pkNames = getPkNames();
         JSONObject param = getParam();
@@ -51,7 +48,7 @@ public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
         for (String clause : whereClauses) {
             WHERE(clause);
         }
-        return SQL();
+        return toString();
     }
 
 
