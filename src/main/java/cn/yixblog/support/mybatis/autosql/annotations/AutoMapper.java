@@ -16,7 +16,7 @@ public @interface AutoMapper {
      * primary columns
      * @return pkName
      */
-    String[] pkName() default {"pkid"};
+    String[] pkName();
 
     /**
      * if the primary key auto increment
