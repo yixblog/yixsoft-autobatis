@@ -2,6 +2,8 @@ package cn.yixblog.support.mybatis.autosql.core;
 
 import cn.yixblog.support.mybatis.autosql.dialects.ColumnInfo;
 import cn.yixblog.support.mybatis.autosql.dialects.ISqlDialect;
+import cn.yixblog.support.mybatis.autosql.pk.IPrimaryKeyProvider;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 
 import java.util.Map;
 
@@ -24,5 +26,5 @@ public interface IAutoSqlProvider {
 
     void setTable(String tableName);
 
-    void setPkAutoIncrement(boolean pkAutoIncrement);
+    void setPkProvider(Class<? extends KeyGenerator> pkProvider);
 }

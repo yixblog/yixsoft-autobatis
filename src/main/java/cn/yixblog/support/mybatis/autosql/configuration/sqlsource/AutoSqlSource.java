@@ -1,18 +1,20 @@
 package cn.yixblog.support.mybatis.autosql.configuration.sqlsource;
 
 import cn.yixblog.support.mybatis.autosql.configuration.support.config.SqlGenerationConfig;
+import cn.yixblog.support.mybatis.autosql.configuration.support.dialect.SqlDialectManager;
 import cn.yixblog.support.mybatis.autosql.configuration.support.spring.ApplicationContextHelper;
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
-import cn.yixblog.support.mybatis.autosql.pk.IPrimaryKeyProvider;
 import cn.yixblog.support.mybatis.utils.ResultMapUtils;
 import org.apache.ibatis.builder.SqlSourceBuilder;
-import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,10 +59,19 @@ public class AutoSqlSource implements SqlSource {
         builder.resultMaps(ResultMapUtils.createJsonResultMap(configuration, genConfig.getStatementId(), genConfig.getResultType()));
         String[] pkNames = genConfig.getPkNames();
         if (genConfig.getType() == SqlCommandType.INSERT && pkNames.length == 1) {
-            builder.keyGenerator(genConfig.isPkAutoIncrement() ? new Jdbc3KeyGenerator() : ApplicationContextHelper.getBean(IPrimaryKeyProvider.class));
+            builder.keyGenerator(keyGenerator(genConfig.getPkProvider()));
             builder.keyProperty(pkNames[0]);
             builder.keyColumn(pkNames[0]);
         }
         return builder.build();
+    }
+
+    private KeyGenerator keyGenerator(Class<? extends KeyGenerator> keyGenType) {
+        try {
+            Constructor<? extends KeyGenerator> constructor = keyGenType.getDeclaredConstructor();
+            return constructor.newInstance();
+        } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException("Failed to init key generator due to no empty constructors", e);
+        }
     }
 }

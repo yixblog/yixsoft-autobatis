@@ -6,6 +6,7 @@ import cn.yixblog.support.mybatis.autosql.configuration.sqlsource.AutoSqlSource;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.mybatis.spring.mapper.MapperFactoryBean;
+import org.springframework.beans.factory.FactoryBean;
 
 import java.lang.reflect.Method;
 
@@ -15,8 +16,14 @@ import java.lang.reflect.Method;
  * register AutoSql Mapper methods into statements
  * Created by yixian on 2015-09-01.
  */
-public class YixMapperFactoryBean extends MapperFactoryBean implements IAutoSqlFactoryBean {
+public class YixMapperFactoryBean<T> extends MapperFactoryBean<T> implements IAutoSqlFactoryBean, FactoryBean<T> {
 
+    public YixMapperFactoryBean() {
+    }
+
+    public YixMapperFactoryBean(Class<T> mapperInterface) {
+        super(mapperInterface);
+    }
 
     @Override
     protected void checkDaoConfig() {

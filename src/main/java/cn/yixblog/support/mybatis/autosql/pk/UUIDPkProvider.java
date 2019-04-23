@@ -5,8 +5,6 @@ import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.stereotype.Component;
 
 import java.sql.Statement;
 import java.util.UUID;
@@ -15,8 +13,6 @@ import java.util.UUID;
  * generate primary key using uuid api
  * Created by yixian on 2015-09-02.
  */
-@Component
-@Conditional(BeanExistsCondition.class)
 public class UUIDPkProvider implements IPrimaryKeyProvider {
 
     @Override
@@ -25,7 +21,7 @@ public class UUIDPkProvider implements IPrimaryKeyProvider {
         if (parameter != null && keyColumns.length == 1) {
             final Configuration configuration = ms.getConfiguration();
             final MetaObject metaParam = configuration.newMetaObject(parameter);
-            if (metaParam.getValue(keyColumns[0])==null) {
+            if (metaParam.getValue(keyColumns[0]) == null) {
                 setValue(metaParam, keyColumns[0], UUID.randomUUID().toString());
             }
         }

@@ -16,7 +16,7 @@ import java.util.List;
  * Created by yixian on 2015-09-05.
  */
 @Component
-public class OracleDialect implements ISqlDialect {
+public class OracleDialect extends ISqlDialect {
     private OracleTableMapper oracleTableMapper;
 
     @Override

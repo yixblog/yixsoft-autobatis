@@ -6,6 +6,7 @@ import cn.yixblog.support.mybatis.autosql.dialects.ISqlDialect;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.*;
@@ -22,9 +23,8 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
     private Map<String, ColumnInfo> tableColumnMap;
     private Map<String, Object> additionalParam = new HashMap<>();
     private String tableName;
-    private boolean pkAutoIncrement;
-
     private String builtSql;
+    private Class<? extends KeyGenerator> pkProvider;
 
     @Override
     public synchronized String getSql() {
@@ -80,8 +80,12 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
     }
 
     @Override
-    public void setPkAutoIncrement(boolean pkAutoIncrement) {
-        this.pkAutoIncrement = pkAutoIncrement;
+    public void setPkProvider(Class<? extends KeyGenerator> pkProvider) {
+        this.pkProvider = pkProvider;
+    }
+
+    public Class<? extends KeyGenerator> getPkProvider() {
+        return pkProvider;
     }
 
     @Override
@@ -103,10 +107,6 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
                 usedKeySet.add(key.toLowerCase());
             }
         }
-    }
-
-    protected boolean isPkAutoIncrement() {
-        return pkAutoIncrement;
     }
 
     protected String buildParamCondition(ColumnInfo columnInfo, String key, Object value) {

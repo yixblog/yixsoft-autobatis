@@ -22,9 +22,7 @@ import java.util.Arrays;
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
 @Rollback
 public class TestBatisPlugin {
-    @Autowired
     private BasicLogMapper logMapper;
-    @Autowired
     private Log2Mapper log2Mapper;
 
     @Test
@@ -70,4 +68,15 @@ public class TestBatisPlugin {
         assert log2.getInteger("pkid") != null;
     }
 
+    @Autowired
+    public TestBatisPlugin setLogMapper(BasicLogMapper logMapper) {
+        this.logMapper = logMapper;
+        return this;
+    }
+
+    @Autowired
+    public TestBatisPlugin setLog2Mapper(Log2Mapper log2Mapper) {
+        this.log2Mapper = log2Mapper;
+        return this;
+    }
 }

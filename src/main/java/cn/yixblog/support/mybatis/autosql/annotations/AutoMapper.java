@@ -1,5 +1,9 @@
 package cn.yixblog.support.mybatis.autosql.annotations;
 
+import cn.yixblog.support.mybatis.autosql.pk.IPrimaryKeyProvider;
+import cn.yixblog.support.mybatis.autosql.pk.UUIDPkProvider;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
+
 import java.lang.annotation.*;
 
 /**
@@ -22,7 +26,7 @@ public @interface AutoMapper {
      * if the primary key auto increment
      * @return boolean value
      */
-    boolean pkAutoIncrement() default false;
+    Class<? extends KeyGenerator> keyGenerator() default UUIDPkProvider.class;
 
     /**
      * the dialect name to use.keep null to use the default dialect in configuation

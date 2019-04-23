@@ -16,7 +16,7 @@ import java.util.List;
  * Created by yixian on 2015-09-01.
  */
 @Component
-public class MySqlDialect implements ISqlDialect {
+public class MySqlDialect extends ISqlDialect {
     private DescMySqlTableMapper tableMapper;
 
     @Override
@@ -43,7 +43,7 @@ public class MySqlDialect implements ISqlDialect {
         return "`" + name + "`";
     }
 
-    @Autowired(required = false)
+    @Autowired
     public MySqlDialect setTableMapper(DescMySqlTableMapper tableMapper) {
         this.tableMapper = tableMapper;
         return this;
