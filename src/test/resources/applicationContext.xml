@@ -17,7 +17,7 @@
         <property name="configLocation" value="classpath:batisConfig.xml"/>
     </bean>
 
-    <bean class="cn.yixblog.support.mybatis.autosql.configuration.YixMapperScannerConfigurer">
+    <bean class="cn.yixblog.support.mybatis.YixMapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <property name="basePackage" value="cn.yixblog.support.mybatis.test.mappers"/>
     </bean>

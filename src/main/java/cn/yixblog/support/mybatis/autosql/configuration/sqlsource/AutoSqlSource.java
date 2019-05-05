@@ -1,8 +1,6 @@
 package cn.yixblog.support.mybatis.autosql.configuration.sqlsource;
 
 import cn.yixblog.support.mybatis.autosql.configuration.support.config.SqlGenerationConfig;
-import cn.yixblog.support.mybatis.autosql.configuration.support.dialect.SqlDialectManager;
-import cn.yixblog.support.mybatis.autosql.configuration.support.spring.ApplicationContextHelper;
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
 import cn.yixblog.support.mybatis.utils.ResultMapUtils;
 import org.apache.ibatis.builder.SqlSourceBuilder;

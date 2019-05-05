@@ -1,4 +1,4 @@
-package cn.yixblog.support.mybatis.autosql.configuration;
+package cn.yixblog.support.mybatis;
 
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.beans.factory.BeanNameAware;
