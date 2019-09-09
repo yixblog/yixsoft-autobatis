@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
@@ -22,12 +23,13 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
-@Rollback
+@Transactional
 public class TestBatisPlugin {
     private BasicLogMapper logMapper;
     private Log2Mapper log2Mapper;
 
     @Test
+    @Rollback
     public void validPlugin() {
         JSONObject itm = logMapper.findOne("aba");
         assertNotNull("aba instance should be exists", itm);
@@ -64,6 +66,11 @@ public class TestBatisPlugin {
         logMapper.update(inserted);
         inserted = logMapper.findOne(newLogId);
         assertEquals("update when id key is array should be accepted", "222", inserted.getString("content"));
+
+        logMapper.updateContentTo333(newLogId);
+        inserted = logMapper.findOne(newLogId);
+        assertEquals("update when id key is array should be accepted", "333", inserted.getString("content"));
+
 
         demo = logMapper.findOneShort(newLogId);
         assertTrue("advance select should removed content column from result", demo != null && !demo.containsKey("content"));

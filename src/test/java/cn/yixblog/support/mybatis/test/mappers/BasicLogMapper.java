@@ -1,9 +1,6 @@
 package cn.yixblog.support.mybatis.test.mappers;
 
-import cn.yixblog.support.mybatis.autosql.annotations.AdvanceSelect;
-import cn.yixblog.support.mybatis.autosql.annotations.AutoMapper;
-import cn.yixblog.support.mybatis.autosql.annotations.AutoSql;
-import cn.yixblog.support.mybatis.autosql.annotations.SqlType;
+import cn.yixblog.support.mybatis.autosql.annotations.*;
 import cn.yixblog.support.mybatis.paginator.annotations.CountRef;
 import cn.yixblog.support.mybatis.paginator.annotations.CountSqlTpl;
 import com.alibaba.fastjson.JSONObject;
@@ -30,7 +27,7 @@ public interface BasicLogMapper {
     JSONObject findOne(String pkid);
 
     @AutoSql(type = SqlType.SELECT)
-    @AdvanceSelect(excludeColumns = {"content"}, addonWhereClause = "content='222'")
+    @AdvanceSelect(excludeColumns = {"content"}, addonWhereClause = "content='333'")
     JSONObject findOneShort(String pkid);
 
     @AutoSql(type = SqlType.COUNT)
@@ -44,4 +41,7 @@ public interface BasicLogMapper {
 
     @AutoSql(type = SqlType.DELETE)
     void delete(String pkid);
+
+    @StaticUpdate("content='333'")
+    void updateContentTo333(String pkid);
 }

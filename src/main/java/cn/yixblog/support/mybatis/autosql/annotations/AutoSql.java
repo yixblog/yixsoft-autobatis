@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  * Created by yixian on 2015-08-27.
  */
 @Documented
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoSql {
     SqlType type();

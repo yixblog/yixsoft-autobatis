@@ -1,12 +1,12 @@
 package cn.yixblog.support.mybatis.autosql.configuration;
 
 import cn.yixblog.support.mybatis.InterfaceMapperConfigurator;
-import cn.yixblog.support.mybatis.YixMapperFactoryBean;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoMapper;
 import cn.yixblog.support.mybatis.autosql.annotations.AutoSql;
 import cn.yixblog.support.mybatis.autosql.configuration.sqlsource.AutoSqlSource;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 
 import java.lang.reflect.Method;
 
@@ -20,7 +20,7 @@ public class AutoSqlMapperConfigurator implements InterfaceMapperConfigurator {
         if (mapperInterface.isAnnotationPresent(AutoMapper.class)) {
             for (Method method : mapperInterface.getDeclaredMethods()) {
                 String statementName = InterfaceMapperConfigurator.getMethodStatementName(mapperInterface, method);
-                if (!configuration.hasStatement(statementName) && method.isAnnotationPresent(AutoSql.class)) {
+                if (!configuration.hasStatement(statementName) && AnnotatedElementUtils.isAnnotated(method, AutoSql.class)) {
                     MappedStatement ms = getMethodStatement(configuration, statementName, method);
                     configuration.addMappedStatement(ms);
                 }

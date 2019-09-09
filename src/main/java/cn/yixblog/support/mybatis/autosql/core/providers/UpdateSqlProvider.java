@@ -13,6 +13,7 @@ import java.util.*;
  * Created by yixian on 2015-09-02.
  */
 public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlProvider {
+    private String[] staticUpdates;
 
     @Override
     protected String buildSql() {
@@ -45,6 +46,11 @@ public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
         if (whereClauses.size() < pkNames.length) {
             throw new AutoSqlException("when building auto update sql,primary keys must not be null");
         }
+        if (staticUpdates != null) {
+            for (String updateFragment : staticUpdates) {
+                SET(updateFragment);
+            }
+        }
         for (String clause : whereClauses) {
             WHERE(clause);
         }
@@ -52,4 +58,8 @@ public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
     }
 
 
+    public UpdateSqlProvider setStaticUpdates(String[] staticUpdates) {
+        this.staticUpdates = staticUpdates;
+        return this;
+    }
 }

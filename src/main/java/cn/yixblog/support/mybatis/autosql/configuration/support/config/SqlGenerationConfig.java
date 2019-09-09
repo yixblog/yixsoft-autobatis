@@ -1,13 +1,11 @@
 package cn.yixblog.support.mybatis.autosql.configuration.support.config;
 
-import cn.yixblog.support.mybatis.autosql.annotations.AdvanceSelect;
-import cn.yixblog.support.mybatis.autosql.annotations.AutoMapper;
-import cn.yixblog.support.mybatis.autosql.annotations.AutoSql;
-import cn.yixblog.support.mybatis.autosql.annotations.SqlType;
+import cn.yixblog.support.mybatis.autosql.annotations.*;
 import cn.yixblog.support.mybatis.autosql.configuration.support.dialect.SqlDialectManager;
 import cn.yixblog.support.mybatis.autosql.core.IAutoSqlProvider;
 import cn.yixblog.support.mybatis.autosql.core.providers.CountSqlProvider;
 import cn.yixblog.support.mybatis.autosql.core.providers.SelectSqlProvider;
+import cn.yixblog.support.mybatis.autosql.core.providers.UpdateSqlProvider;
 import cn.yixblog.support.mybatis.autosql.dialects.ColumnInfo;
 import cn.yixblog.support.mybatis.autosql.dialects.ISqlDialect;
 import cn.yixblog.support.mybatis.utils.MapperMethodUtils;
@@ -15,6 +13,7 @@ import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,6 +33,7 @@ public class SqlGenerationConfig {
     private Map<String, ColumnInfo> tableColumns;
     private final String[] excludeColumns;
     private final String addonWhereClause;
+    private final String[] staticUpdates;
     private final String dialectName;
     private final String statementId;
     private final Class resultType;
@@ -41,8 +41,8 @@ public class SqlGenerationConfig {
 
     public SqlGenerationConfig(String statementName, Method method) {
         statementId = statementName;
-        AutoSql autoSqlConfig = method.getAnnotation(AutoSql.class);
-        AdvanceSelect advanceSelect = method.getAnnotation(AdvanceSelect.class);
+        AutoSql autoSqlConfig = AnnotatedElementUtils.getMergedAnnotation(method, AutoSql.class);
+        AdvanceSelect advanceSelect = AnnotatedElementUtils.getMergedAnnotation(method, AdvanceSelect.class);
         if (advanceSelect != null) {
             excludeColumns = advanceSelect.excludeColumns();
             addonWhereClause = advanceSelect.addonWhereClause();
@@ -57,6 +57,12 @@ public class SqlGenerationConfig {
         resultType = MapperMethodUtils.getReturnType(method);
         type = autoSqlConfig.type();
         dialectName = autoMapperConfig.dialect();
+        StaticUpdate updateAnnotation = AnnotatedElementUtils.getMergedAnnotation(method, StaticUpdate.class);
+        if (type == SqlType.UPDATE && updateAnnotation != null) {
+            staticUpdates = updateAnnotation.value();
+        } else {
+            staticUpdates = null;
+        }
     }
 
     public IAutoSqlProvider newSqlProvider(Object parameterObject) {
@@ -77,6 +83,8 @@ public class SqlGenerationConfig {
                 ((SelectSqlProvider) provider).setAddonWhereClause(addonWhereClause);
             } else if (provider instanceof CountSqlProvider) {
                 ((CountSqlProvider) provider).setAddonWhereClause(addonWhereClause);
+            } else if (provider instanceof UpdateSqlProvider) {
+                ((UpdateSqlProvider) provider).setStaticUpdates(staticUpdates);
             }
 
             return provider;
