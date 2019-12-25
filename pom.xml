@@ -68,18 +68,35 @@
         </dependencies>
     </dependencyManagement>
 
-    <distributionManagement>
-        <repository>
-            <id>yix_aliyun_nexus</id>
-            <name>aliyun_nexus</name>
-            <url>http://nexus.yixblog.com/content/repositories/cn.yixblog</url>
-        </repository>
-        <snapshotRepository>
-            <id>yix_aliyun_nexus</id>
-            <name>aliyun nexus</name>
-            <url>http:///nexus.yixblog.com/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <distributionManagement>
+                <repository>
+                    <id>yix_aliyun_nexus</id>
+                    <name>aliyun_nexus</name>
+                    <url>http://nexus.yixblog.com/content/repositories/cn.yixblog</url>
+                </repository>
+                <snapshotRepository>
+                    <id>yix_aliyun_nexus</id>
+                    <name>aliyun nexus</name>
+                    <url>http:///nexus.yixblog.com/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>github</id>
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub yixsoft Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/yixblog/yixsoft-autobatis</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+
     <build>
         <plugins>
             <plugin>
