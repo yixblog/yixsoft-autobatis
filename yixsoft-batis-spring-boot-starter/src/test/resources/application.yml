@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/batis_test?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: netyixian
+debug: true
+mybatis:
+  configuration:
+    mapUnderscoreToCamelCase: true
+  dialects:
+    - com.yixsoft.support.mybatis.dialects.mysql.MySqlDialect
+  paginator:
+    enable: true
+    advanced-count: true
+    dialect: com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect

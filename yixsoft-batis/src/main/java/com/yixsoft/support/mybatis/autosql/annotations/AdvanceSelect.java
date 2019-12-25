@@ -9,6 +9,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@AutoSql(value = SqlType.SELECT)
 public @interface AdvanceSelect {
     /**
      * columns declared in this param will not appears in the auto-generated sql

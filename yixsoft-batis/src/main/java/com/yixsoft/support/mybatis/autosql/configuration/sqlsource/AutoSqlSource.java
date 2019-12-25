@@ -10,6 +10,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
+import org.mybatis.spring.mapper.MapperFactoryBean;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -26,9 +27,9 @@ public class AutoSqlSource implements SqlSource {
     private Configuration configuration;
     private SqlGenerationConfig genConfig;
 
-    public AutoSqlSource(String statementName, Configuration configuration, Method method) {
+    public AutoSqlSource(MapperFactoryBean factory, String statementName, Configuration configuration, Method method) {
         this.configuration = configuration;
-        genConfig = new SqlGenerationConfig(statementName, method);
+        genConfig = new SqlGenerationConfig(factory, configuration, statementName, method);
     }
 
     @Override

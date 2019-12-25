@@ -1,22 +1,28 @@
 package com.yixsoft.support.mybatis.autosql.configuration.support.config;
 
 import com.yixsoft.support.mybatis.autosql.annotations.*;
-import com.yixsoft.support.mybatis.autosql.configuration.support.dialect.SqlDialectManager;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.core.providers.CountSqlProvider;
 import com.yixsoft.support.mybatis.autosql.core.providers.SelectSqlProvider;
 import com.yixsoft.support.mybatis.autosql.core.providers.UpdateSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
+import com.yixsoft.support.mybatis.autosql.dialects.SqlDialectManager;
+import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
 import com.yixsoft.support.mybatis.utils.MapperMethodUtils;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.session.Configuration;
+import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,17 +36,21 @@ public class SqlGenerationConfig {
     private final String tableName;
     private final String[] pkNames;
     private final Class<? extends KeyGenerator> pkProvider;
+    private final Configuration configuration;
+    private final MapperFactoryBean parentFactory;
+    private ISqlDialect dialect;
     private Map<String, ColumnInfo> tableColumns;
     private final String[] excludeColumns;
     private final String addonWhereClause;
     private final String[] staticUpdates;
-    private final String dialectName;
     private final String statementId;
     private final Class resultType;
     private final SqlType type;
 
-    public SqlGenerationConfig(String statementName, Method method) {
+    public SqlGenerationConfig(MapperFactoryBean factory, Configuration configuration, String statementName, Method method) {
         statementId = statementName;
+        this.parentFactory = factory;
+        this.configuration = configuration;
         AutoSql autoSqlConfig = AnnotatedElementUtils.getMergedAnnotation(method, AutoSql.class);
         AdvanceSelect advanceSelect = AnnotatedElementUtils.getMergedAnnotation(method, AdvanceSelect.class);
         if (advanceSelect != null) {
@@ -55,8 +65,7 @@ public class SqlGenerationConfig {
         pkProvider = autoMapperConfig.keyGenerator();
         tableName = autoMapperConfig.tablename();
         resultType = MapperMethodUtils.getReturnType(method);
-        type = autoSqlConfig.type();
-        dialectName = autoMapperConfig.dialect();
+        type = autoSqlConfig.value();
         StaticUpdate updateAnnotation = AnnotatedElementUtils.getMergedAnnotation(method, StaticUpdate.class);
         if (type == SqlType.UPDATE && updateAnnotation != null) {
             staticUpdates = updateAnnotation.value();
@@ -76,7 +85,8 @@ public class SqlGenerationConfig {
             provider.setPkProvider(pkProvider);
             provider.setTable(tableName);
             provider.setTableColumns(tableColumns);
-            provider.setDialect(SqlDialectManager.getDialect(dialectName));
+
+            provider.setDialect(getDialect());
             provider.setParameter(parameterObject);
             if (provider instanceof SelectSqlProvider) {
                 ((SelectSqlProvider) provider).setExcludeColumns(excludeColumns);
@@ -96,13 +106,24 @@ public class SqlGenerationConfig {
     }
 
     private void loadTableColumns() {
-        ISqlDialect dialect = SqlDialectManager.getDialect(dialectName);
-        List<ColumnInfo> columns = dialect.selectTableColumns(tableName);
+        List<ColumnInfo> columns = getDialect().selectTableColumns(tableName);
         Map<String, ColumnInfo> columnMap = new HashMap<>();
         for (ColumnInfo col : columns) {
             columnMap.put(col.getColumn().toLowerCase(), col);
         }
         tableColumns = columnMap;
+    }
+
+    private ISqlDialect getDialect() {
+        if (dialect == null) {
+            try (Connection con = configuration.getEnvironment().getDataSource().getConnection()) {
+                DatabaseMetaData metaData = con.getMetaData();
+                dialect = SqlDialectManager.getDialect(parentFactory, metaData.getDatabaseProductName());
+            } catch (SQLException e) {
+                throw new AutoSqlException("failed to connect to database", e);
+            }
+        }
+        return dialect;
     }
 
     public String[] getPkNames() {

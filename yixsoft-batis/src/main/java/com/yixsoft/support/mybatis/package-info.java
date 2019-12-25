@@ -7,7 +7,7 @@
  *     <li>auto generate simple CRUD SQL</li>
  *     <li>auto build result json and lowercase all keys</li>
  * </ul>
- *
+ * <p>
  * Created by yixian on 2015-08-27.
  */
 package com.yixsoft.support.mybatis;

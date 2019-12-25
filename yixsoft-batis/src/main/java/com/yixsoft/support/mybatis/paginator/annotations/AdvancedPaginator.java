@@ -7,8 +7,9 @@ import java.lang.annotation.*;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD,ElementType.ANNOTATION_TYPE})
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 public @interface AdvancedPaginator {
     String countRef() default "";
+
     String countSql() default "";
 }

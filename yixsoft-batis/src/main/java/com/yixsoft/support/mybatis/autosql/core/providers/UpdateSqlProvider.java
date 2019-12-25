@@ -2,7 +2,7 @@ package com.yixsoft.support.mybatis.autosql.core.providers;
 
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
-import com.yixsoft.support.mybatis.exceptions.AutoSqlException;
+import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.ArrayUtils;
 

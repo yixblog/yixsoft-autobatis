@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@AutoSql(type = SqlType.UPDATE)
+@AutoSql(value = SqlType.UPDATE)
 public @interface StaticUpdate {
     String[] value() default {};
 }

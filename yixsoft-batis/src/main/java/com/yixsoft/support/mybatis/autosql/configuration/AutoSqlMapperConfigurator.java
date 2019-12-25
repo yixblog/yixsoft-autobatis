@@ -6,6 +6,7 @@ import com.yixsoft.support.mybatis.autosql.annotations.AutoSql;
 import com.yixsoft.support.mybatis.autosql.configuration.sqlsource.AutoSqlSource;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
+import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
 import java.lang.reflect.Method;
@@ -16,20 +17,21 @@ import java.lang.reflect.Method;
 public class AutoSqlMapperConfigurator implements InterfaceMapperConfigurator {
 
     @Override
-    public void config(Configuration configuration, Class mapperInterface) {
+    public void config(MapperFactoryBean factory, Class mapperInterface) {
         if (mapperInterface.isAnnotationPresent(AutoMapper.class)) {
+            Configuration configuration = factory.getSqlSession().getConfiguration();
             for (Method method : mapperInterface.getDeclaredMethods()) {
                 String statementName = InterfaceMapperConfigurator.getMethodStatementName(mapperInterface, method);
                 if (!configuration.hasStatement(statementName) && AnnotatedElementUtils.isAnnotated(method, AutoSql.class)) {
-                    MappedStatement ms = getMethodStatement(configuration, statementName, method);
+                    MappedStatement ms = getMethodStatement(factory, configuration, statementName, method);
                     configuration.addMappedStatement(ms);
                 }
             }
         }
     }
 
-    private MappedStatement getMethodStatement(Configuration configuration, String statementName, Method method) {
-        AutoSqlSource sqlSource = new AutoSqlSource(statementName, configuration, method);
+    private MappedStatement getMethodStatement(MapperFactoryBean factory, Configuration configuration, String statementName, Method method) {
+        AutoSqlSource sqlSource = new AutoSqlSource(factory, statementName, configuration, method);
         return sqlSource.createStatement();
     }
 

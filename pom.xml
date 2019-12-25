@@ -15,12 +15,58 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <commons-lang3.version>3.9</commons-lang3.version>
+        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
+        <spring.version>5.2.1.RELEASE</spring.version>
+        <mybatis.version>[3.5.0,)</mybatis.version>
     </properties>
 
     <modules>
         <module>yixsoft-batis</module>
+        <module>yixsoft-batis-spring-boot-starter</module>
+        <module>yixsoft-batis-dialect-mysql</module>
+        <module>yixsoft-batis-dialects-core</module>
+        <module>yixsoft-batis-dialect-oracle</module>
 
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>[1.2.56,)</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>[2.0.0,)</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.miemiedev</groupId>
+                <artifactId>mybatis-paginator</artifactId>
+                <version>[1.2.15,)</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <distributionManagement>
         <repository>

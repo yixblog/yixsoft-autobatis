@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by yixian on 2015-09-02.
  */
 public interface IAutoSqlProvider {
-    Map<String,Object> getAdditionalParams();
+    Map<String, Object> getAdditionalParams();
 
     String getSql();
 

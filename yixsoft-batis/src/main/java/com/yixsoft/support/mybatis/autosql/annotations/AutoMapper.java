@@ -17,19 +17,16 @@ public @interface AutoMapper {
 
     /**
      * primary columns
+     *
      * @return pkName
      */
     String[] pkName();
 
     /**
      * if the primary key auto increment
+     *
      * @return boolean value
      */
     Class<? extends KeyGenerator> keyGenerator() default UUIDPkProvider.class;
 
-    /**
-     * the dialect name to use.keep null to use the default dialect in configuation
-     * @return dialect name
-     */
-    String dialect() default "";
 }

@@ -2,7 +2,6 @@ package com.yixsoft.support.mybatis;
 
 import com.yixsoft.support.mybatis.autosql.configuration.AutoSqlMapperConfigurator;
 import com.yixsoft.support.mybatis.autosql.configuration.IAutoSqlFactoryBean;
-import org.apache.ibatis.session.Configuration;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +51,9 @@ public class YixMapperFactoryBean<T> extends MapperFactoryBean<T> implements IAu
 
     @Override
     public void attachAutoSqlStatements() {
-        Configuration configuration = getSqlSession().getConfiguration();
         Class mapperInterface = getMapperInterface();
         for (InterfaceMapperConfigurator conf : configurators) {
-            conf.config(configuration, mapperInterface);
+            conf.config(this, mapperInterface);
         }
     }
 

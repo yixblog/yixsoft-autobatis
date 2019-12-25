@@ -11,13 +11,13 @@ import java.util.List;
  * Created by yixian on 2015-09-03.
  */
 public class MethodReturnTypeUtilsTest {
-    public List<JSONObject> method(){
+    public List<JSONObject> method() {
         return null;
     }
 
     @Test
     public void test() throws NoSuchMethodException {
-        Method method= getClass().getMethod("method");
+        Method method = getClass().getMethod("method");
         Class clazz = MapperMethodUtils.getReturnType(method);
         assert JSONObject.class.isAssignableFrom(clazz);
     }

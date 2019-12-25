@@ -13,6 +13,6 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @AdvancedPaginator
 public @interface CountRef {
-    @AliasFor(annotation = AdvancedPaginator.class,attribute = "countRef")
+    @AliasFor(annotation = AdvancedPaginator.class, attribute = "countRef")
     String value();
 }

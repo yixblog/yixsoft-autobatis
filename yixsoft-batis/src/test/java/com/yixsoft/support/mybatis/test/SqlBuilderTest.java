@@ -10,12 +10,12 @@ import org.junit.Test;
 public class SqlBuilderTest {
 
     @Test
-    public void test(){
+    public void test() {
         SQL sql = new SQL();
         sql.SELECT("*").
-        FROM("tablesample").
-        WHERE("1=1").
-        WHERE("AND a=1");
+                FROM("tablesample").
+                WHERE("1=1").
+                WHERE("AND a=1");
         System.out.println(sql.toString());
     }
 }

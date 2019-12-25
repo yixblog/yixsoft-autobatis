@@ -11,8 +11,8 @@ import java.util.Map;
 public class LowerMapUtils {
     public static JSONObject lowercase(JSONObject obj) {
         JSONObject item = new JSONObject();
-        for (Map.Entry<String,Object> entry: obj.entrySet()){
-            item.put(entry.getKey().toLowerCase(),entry.getValue());
+        for (Map.Entry<String, Object> entry : obj.entrySet()) {
+            item.put(entry.getKey().toLowerCase(), entry.getValue());
         }
         return item;
     }
