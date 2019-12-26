@@ -141,4 +141,24 @@
             </plugin>
         </plugins>
     </build>
+
+    <licenses>
+        <license>
+            <name>MIT Licence</name>
+            <distribution>repo</distribution>
+            <url>https://github.com/yixblog/yixsoft-autobatis/blob/master/LICENSE.md</url>
+        </license>
+    </licenses>
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/yixblog/yixsoft-autobatis.git</url>
+        <connection>scm:git:https://github.com/yixblog/yixsoft-autobatis.git</connection>
+        <developerConnection>scm:git:https://github.com/yixblog/yixsoft-autobatis.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <name>Astro Dai</name>
+            <email>davepotter@163.com</email>
+        </developer>
+    </developers>
 </project>
