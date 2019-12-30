@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>yixsoft-batis-dialect-oracle</artifactId>
+    <name>yixsoft-batis-dialects-oracle-impl</name>
 
     <dependencies>
         <dependency>

@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>yixsoft-batis</artifactId>
-
+    <name>yixsoft-batis-plugin</name>
 
     <dependencies>
         <dependency>

@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>yixsoft-batis-dialects-core</artifactId>
+    <name>yixsoft-batis-dialects-core</name>
 
     <dependencies>
         <dependency>

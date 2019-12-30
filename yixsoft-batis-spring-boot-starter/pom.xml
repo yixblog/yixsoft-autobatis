@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>yixsoft-batis-spring-boot-starter</artifactId>
-
+    <name>yixsoft-batis-srpingboot-autoconfigurer</name>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
