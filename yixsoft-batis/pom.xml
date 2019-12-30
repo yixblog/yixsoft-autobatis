@@ -11,57 +11,6 @@
 
     <artifactId>yixsoft-batis</artifactId>
 
-    <distributionManagement>
-        <repository>
-            <id>yix_aliyun_nexus</id>
-            <name>aliyun_nexus</name>
-            <url>http://nexus.yixblog.com/content/repositories/cn.yixblog</url>
-        </repository>
-        <snapshotRepository>
-            <id>yix_aliyun_nexus</id>
-            <name>aliyun nexus</name>
-            <url>http:///nexus.yixblog.com/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>utf-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
         <dependency>
