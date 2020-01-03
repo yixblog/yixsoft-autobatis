@@ -18,6 +18,24 @@ it will be passed as a null value.
 This project depends on `com.alibaba:fastjson` project. we may remove it in the future to get thinner
 
 ## Configurations
+
+MAVEN
+```xml
+<dependency>
+  <groupId>com.yixsoft</groupId>
+  <artifactId>yixsoft-batis-spring-boot-starter</artifactId>
+  <version>${autobatis.version}</version>
+</dependency>
+```
+```xml
+<!-- add dialect dependency -->
+<dependency>
+  <groupId>com.yixsoft</groupId>
+  <artifactId>yixsoft-batis-dialect-mysql</artifactId>
+  <version>${autobatis.version}</version>
+</dependency>
+```
+
 ```yaml
 # first you have to configure datasource
 mybatis:
