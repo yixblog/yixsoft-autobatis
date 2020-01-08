@@ -6,6 +6,7 @@ import com.yixsoft.support.mybatis.paginator.annotations.CountSqlTpl;
 import com.alibaba.fastjson.JSONObject;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import com.yixsoft.support.mybatis.test.LogEntity;
 
 /**
  * Created by yixian on 2015-08-31.
@@ -43,4 +44,7 @@ public interface BasicLogMapper {
 
     @StaticUpdate("content='333'")
     void updateContentTo333(String pkid);
+
+    @AutoSql(SqlType.INSERT)
+    void saveEntity(LogEntity log);
 }

@@ -81,6 +81,10 @@ public class TestBatisPlugin {
         log2.put("name", "hhh");
         log2Mapper.save(log2);
         Assert.assertNotNull("autoincrement id can get", log2.getInteger("pkid"));
+
+        LogEntity log3 = new LogEntity().setUserid(123).setContent("bar");
+        logMapper.saveEntity(log3);
+        Assert.assertNotNull(log3.getId());
     }
 
     @Autowired
