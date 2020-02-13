@@ -1,12 +1,13 @@
 package com.yixsoft.support.mybatis.test.mappers;
 
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.yixsoft.support.mybatis.autosql.annotations.*;
 import com.yixsoft.support.mybatis.paginator.annotations.CountRef;
 import com.yixsoft.support.mybatis.paginator.annotations.CountSqlTpl;
-import com.alibaba.fastjson.JSONObject;
-import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
-import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.yixsoft.support.mybatis.test.LogEntity;
+
+import java.util.Map;
 
 /**
  * Created by yixian on 2015-08-31.
@@ -14,30 +15,30 @@ import com.yixsoft.support.mybatis.test.LogEntity;
 @AutoMapper(tablename = "sys_log", pkName = "id")
 public interface BasicLogMapper {
     @AutoSql(value = SqlType.SELECT)
-    PageList<JSONObject> list(JSONObject params, PageBounds pageBounds);
+    PageList<Map<String, Object>> list(Map<String, Object> params, PageBounds pageBounds);
 
     @AutoSql(value = SqlType.SELECT)
     @CountRef(".count")
-    PageList<JSONObject> pageListOne(JSONObject params, PageBounds pageBounds);
+    PageList<Map<String,Object>> pageListOne(Map<String,Object> params, PageBounds pageBounds);
 
     @AutoSql(value = SqlType.SELECT)
     @CountSqlTpl("select count(1) from sys_log where id=#{userid}")
-    PageList<JSONObject> pageListFake(JSONObject params, PageBounds pageBounds);
+    PageList<Map<String,Object>> pageListFake(Map<String,Object> params, PageBounds pageBounds);
 
     @AutoSql(value = SqlType.SELECT)
-    JSONObject findOne(String pkid);
+    Map<String,Object> findOne(String pkid);
 
     @AdvanceSelect(excludeColumns = {"content"}, addonWhereClause = "content='333'")
-    JSONObject findOneShort(String pkid);
+    Map<String,Object> findOneShort(String pkid);
 
     @AutoSql(value = SqlType.COUNT)
-    Integer count(JSONObject params);
+    Integer count(Map<String,Object> params);
 
     @AutoSql(value = SqlType.INSERT)
-    void save(JSONObject item);
+    void save(Map<String,Object> item);
 
     @AutoSql(value = SqlType.UPDATE)
-    void update(JSONObject item);
+    void update(Map<String,Object> item);
 
     @AutoSql(value = SqlType.DELETE)
     void delete(String pkid);

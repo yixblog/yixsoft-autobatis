@@ -2,7 +2,6 @@ package com.yixsoft.support.mybatis.autosql.core.providers;
 
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
-import com.alibaba.fastjson.JSONObject;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -17,12 +16,12 @@ public class InsertSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
     @Override
     protected String buildSql() {
         INSERT_INTO(getTableName());
-        JSONObject param = getParam();
+        Map<String, Object> param = getParam();
         attachValues(param);
         return toString();
     }
 
-    private void attachValues(JSONObject param) {
+    private void attachValues(Map<String, Object> param) {
         Set<String> usedKeySet = new HashSet<>();
         for (Map.Entry<String, Object> paramItem : param.entrySet()) {
             ColumnInfo info;

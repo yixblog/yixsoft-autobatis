@@ -1,10 +1,10 @@
 package com.yixsoft.support.mybatis.dialects.oracle;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.autosql.dialects.SupportsDatabase;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
+import com.yixsoft.support.mybatis.dialects.oracle.mappers.OracleColumnDAO;
 import com.yixsoft.support.mybatis.dialects.oracle.mappers.OracleTableMapper;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.ibatis.session.Configuration;
@@ -41,13 +41,13 @@ public class OracleDialect implements ISqlDialect {
 
     @Override
     public List<ColumnInfo> selectTableColumns(String tableName) {
-        List<JSONObject> tableColumns = tableMapper.listOracleTableColumns(tableName);
+        List<OracleColumnDAO> tableColumns = tableMapper.listOracleTableColumns(tableName);
         List<ColumnInfo> columns = new ArrayList<>();
-        for (JSONObject col : tableColumns) {
+        for (OracleColumnDAO col : tableColumns) {
             ColumnInfo info = new ColumnInfo();
-            info.setAllowNull(BooleanUtils.toBoolean(col.getString("nullable")));
-            info.setColumn(col.getString("column_name"));
-            info.setJdbcType(col.getString("data_type"));
+            info.setAllowNull(BooleanUtils.toBoolean(col.getNullable()));
+            info.setColumn(col.getColumnName());
+            info.setJdbcType(col.getDataType());
             columns.add(info);
         }
         return columns;

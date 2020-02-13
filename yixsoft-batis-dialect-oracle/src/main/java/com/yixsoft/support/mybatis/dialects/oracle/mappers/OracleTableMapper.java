@@ -1,6 +1,8 @@
 package com.yixsoft.support.mybatis.dialects.oracle.mappers;
 
-import com.alibaba.fastjson.JSONObject;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -11,5 +13,10 @@ import java.util.List;
  */
 public interface OracleTableMapper {
     @Select("SELECT COLUMN_NAME,DATA_TYPE,NULLABLE FROM USER_TAB_COLUMNS WHERE TABLE_NAME=#{tableName}")
-    List<JSONObject> listOracleTableColumns(String tableName);
+    @Results({
+            @Result(id = true, column = "COLUMN_NAME", property = "columnName"),
+            @Result(column = "DATA_TYPE", property = "dataType"),
+            @Result(column = "NULLABLE", property = "nullable")
+    })
+    List<OracleColumnDAO> listOracleTableColumns(@Param("tableName") String tableName);
 }
