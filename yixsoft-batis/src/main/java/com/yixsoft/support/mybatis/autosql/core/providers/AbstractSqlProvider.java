@@ -1,15 +1,17 @@
 package com.yixsoft.support.mybatis.autosql.core.providers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -19,7 +21,7 @@ import java.util.*;
 public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvider {
     private ISqlDialect dialect;
     private String[] pkNames;
-    private JSONObject param;
+    private Map<String, Object> param;
     private Map<String, ColumnInfo> tableColumnMap;
     private Map<String, Object> additionalParam = new HashMap<>();
     private String tableName;
@@ -39,18 +41,23 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
 
     @Override
     public void setParameter(Object parameterObject) {
-        JSONObject paramObj;
+        Map<String, Object> paramObj;
         if (parameterObject == null) {
             paramObj = null;
         } else if (isWrapperType(parameterObject.getClass()) || parameterObject instanceof CharSequence) {
-            paramObj = new JSONObject();
+            paramObj = new HashMap<>();
             if (pkNames.length == 1) {
                 paramObj.put(pkNames[0], parameterObject);
             }
-        } else if (parameterObject instanceof JSONObject) {
-            paramObj = (JSONObject) parameterObject;
+        } else if (parameterObject instanceof Map) {
+            paramObj = ((Map<?, ?>) parameterObject).entrySet()
+                    .stream()
+                    .filter(entry -> entry.getKey() != null)
+                    .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
         } else {
-            paramObj = (JSONObject) JSONObject.toJSON(parameterObject);
+            ObjectMapper mapper = new ObjectMapper();
+            paramObj = mapper.convertValue(parameterObject, new TypeReference<Map<String, Object>>() {
+            });
         }
         this.param = paramObj;
     }
@@ -151,7 +158,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         return pkNames;
     }
 
-    protected JSONObject getParam() {
+    protected Map<String, Object> getParam() {
         return param;
     }
 

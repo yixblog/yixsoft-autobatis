@@ -1,10 +1,10 @@
 package com.yixsoft.support.mybatis.dialects.mysql;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.autosql.dialects.SupportsDatabase;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
+import com.yixsoft.support.mybatis.dialects.mysql.mappers.DescMySQLDAO;
 import com.yixsoft.support.mybatis.dialects.mysql.mappers.DescMySqlTableMapper;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.ibatis.session.Configuration;
@@ -17,7 +17,7 @@ import java.util.List;
  * dialect for mysql
  * Created by yixian on 2015-09-01.
  */
-@SupportsDatabase({"mysql","mariadb"})
+@SupportsDatabase({"mysql", "mariadb"})
 public class MySqlDialect implements ISqlDialect {
 
     private DescMySqlTableMapper tableMapper;
@@ -42,13 +42,13 @@ public class MySqlDialect implements ISqlDialect {
 
     @Override
     public List<ColumnInfo> selectTableColumns(String tableName) {
-        List<JSONObject> columns = tableMapper.descTable(tableName);
+        List<DescMySQLDAO> columns = tableMapper.descTable(tableName);
         List<ColumnInfo> infos = new ArrayList<>();
-        for (JSONObject column : columns) {
+        for (DescMySQLDAO column : columns) {
             ColumnInfo info = new ColumnInfo();
-            info.setColumn(column.getString("column_name"));
-            info.setJdbcType(column.getString("data_type"));
-            info.setAllowNull(BooleanUtils.toBoolean(column.getString("is_nullable")));
+            info.setColumn(column.getColumnName());
+            info.setJdbcType(column.getDataType());
+            info.setAllowNull(BooleanUtils.toBoolean(column.getIsNullable()));
             infos.add(info);
         }
         return infos;

@@ -3,7 +3,6 @@ package com.yixsoft.support.mybatis.autosql.core.providers;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
@@ -19,7 +18,7 @@ public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
     protected String buildSql() {
         UPDATE(getTableName());
         String[] pkNames = getPkNames();
-        JSONObject param = getParam();
+        Map<String,Object> param = getParam();
         List<String> whereClauses = new ArrayList<>();
         Set<String> usedKeySet = new HashSet<>();
         for (Map.Entry<String, Object> paramItem : param.entrySet()) {

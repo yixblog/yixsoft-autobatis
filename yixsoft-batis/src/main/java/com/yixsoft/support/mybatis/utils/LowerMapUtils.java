@@ -1,7 +1,6 @@
 package com.yixsoft.support.mybatis.utils;
 
-import com.alibaba.fastjson.JSONObject;
-
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -9,10 +8,13 @@ import java.util.Map;
  * Created by yixian on 2015-08-31.
  */
 public class LowerMapUtils {
-    public static JSONObject lowercase(JSONObject obj) {
-        JSONObject item = new JSONObject();
-        for (Map.Entry<String, Object> entry : obj.entrySet()) {
-            item.put(entry.getKey().toLowerCase(), entry.getValue());
+    public static Map<String, Object> lowercase(Map<?, ?> obj) {
+        Map<String, Object> item = new HashMap<>();
+        for (Map.Entry<?, ?> entry : obj.entrySet()) {
+            if (entry.getKey() == null) {
+                continue;
+            }
+            item.put(entry.getKey().toString().toLowerCase(), entry.getValue());
         }
         return item;
     }

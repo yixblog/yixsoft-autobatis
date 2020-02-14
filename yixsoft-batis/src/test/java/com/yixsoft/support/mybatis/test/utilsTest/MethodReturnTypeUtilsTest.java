@@ -1,17 +1,17 @@
 package com.yixsoft.support.mybatis.test.utilsTest;
 
 import com.yixsoft.support.mybatis.utils.MapperMethodUtils;
-import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yixian on 2015-09-03.
  */
 public class MethodReturnTypeUtilsTest {
-    public List<JSONObject> method() {
+    public List<Map<String,Object>> method() {
         return null;
     }
 
@@ -19,6 +19,6 @@ public class MethodReturnTypeUtilsTest {
     public void test() throws NoSuchMethodException {
         Method method = getClass().getMethod("method");
         Class clazz = MapperMethodUtils.getReturnType(method);
-        assert JSONObject.class.isAssignableFrom(clazz);
+        assert Map.class.isAssignableFrom(clazz);
     }
 }
