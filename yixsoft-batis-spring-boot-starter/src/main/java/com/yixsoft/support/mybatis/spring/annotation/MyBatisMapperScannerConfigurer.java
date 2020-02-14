@@ -58,6 +58,14 @@ public class MyBatisMapperScannerConfigurer implements ImportBeanDefinitionRegis
                 basePackages.add(pkg);
             }
         }
+        if (basePackages.isEmpty()) {
+            try {
+                Class<?> declaringClazz = Class.forName(importingClassMetadata.getClassName());
+                basePackages.add(declaringClazz.getPackage().getName());
+            } catch (ClassNotFoundException ignore) {
+
+            }
+        }
         String[] basePackagesStr = basePackages.toArray(new String[basePackages.size()]);
         scanner.scan(basePackagesStr);
     }
