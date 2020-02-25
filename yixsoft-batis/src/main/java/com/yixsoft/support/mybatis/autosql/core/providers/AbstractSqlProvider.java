@@ -2,6 +2,7 @@ package com.yixsoft.support.mybatis.autosql.core.providers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.CaseFormat;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.jdbc.SQL;
+import org.apache.ibatis.session.Configuration;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
  * Created by yixian on 2015-09-05.
  */
 public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvider {
+    private Configuration configuration;
     private ISqlDialect dialect;
     private String[] pkNames;
     private Map<String, Object> param;
@@ -132,6 +135,14 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         return builder.toString();
     }
 
+    protected String filterKeyCase(String keyName) {
+        if (configuration.isMapUnderscoreToCamelCase()) {
+            return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, keyName);
+        }
+        return keyName;
+    }
+
+
     private void buildInConditions(String key, StringBuilder builder, Object[] array) {
         List<String> inConditions = new ArrayList<>();
         for (int i = 0; i < array.length; i++) {
@@ -170,4 +181,12 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         return dialect.escapeKeyword(tableName);
     }
 
+    @Override
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
 }

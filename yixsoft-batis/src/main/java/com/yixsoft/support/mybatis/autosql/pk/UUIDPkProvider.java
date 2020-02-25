@@ -1,5 +1,6 @@
 package com.yixsoft.support.mybatis.autosql.pk;
 
+import com.google.common.base.CaseFormat;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -7,6 +8,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 
 import java.sql.Statement;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -21,8 +23,17 @@ public class UUIDPkProvider implements IPrimaryKeyProvider {
         if (parameter != null && keyColumns.length == 1) {
             final Configuration configuration = ms.getConfiguration();
             final MetaObject metaParam = configuration.newMetaObject(parameter);
-            if (metaParam.getValue(keyColumns[0]) == null) {
-                setValue(metaParam, keyColumns[0], UUID.randomUUID().toString());
+            String paramName = keyColumns[0];
+            if (!(parameter instanceof Map)){
+                if (configuration.isMapUnderscoreToCamelCase()) {
+                    paramName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, paramName);
+                }
+                if (!metaParam.hasGetter(paramName)) {
+                    throw new ExecutorException("No getter found for the keyProperty '" + paramName + "' in " + metaParam.getOriginalObject().getClass().getName() + ".");
+                }
+            }
+            if (metaParam.getValue(paramName) == null) {
+                setValue(metaParam, paramName, UUID.randomUUID().toString());
             }
         }
     }

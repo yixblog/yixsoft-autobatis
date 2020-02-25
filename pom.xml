@@ -13,7 +13,7 @@
     <url>https://github.com/yixblog/yixsoft-autobatis/wiki</url>
 
     <properties>
-        <revision>1.0.4</revision>
+        <revision>1.0.5</revision>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -24,6 +24,7 @@
         <spring.version>5.2.1.RELEASE</spring.version>
         <mybatis.version>[3.5.0,)</mybatis.version>
         <jackson.version>2.10.2</jackson.version>
+        <guava.version>28.2-jre</guava.version>
     </properties>
 
     <modules>
@@ -47,6 +48,13 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.ibatis.session.Configuration;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 
+import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class OracleDialect implements ISqlDialect {
             ColumnInfo info = new ColumnInfo();
             info.setAllowNull(BooleanUtils.toBoolean(col.getNullable()));
             info.setColumn(col.getColumnName());
-            info.setJdbcType(col.getDataType());
+            info.setJdbcType(JDBCType.valueOf(col.getDataType().toUpperCase()));
             columns.add(info);
         }
         return columns;

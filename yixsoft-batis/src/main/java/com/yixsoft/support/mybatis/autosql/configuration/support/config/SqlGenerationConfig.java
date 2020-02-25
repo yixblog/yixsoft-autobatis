@@ -81,6 +81,7 @@ public class SqlGenerationConfig {
         Class<? extends IAutoSqlProvider> providerType = type.getProviderClass();
         try {
             IAutoSqlProvider provider = providerType.getDeclaredConstructor().newInstance();
+            provider.setConfiguration(configuration);
             provider.setPkNames(pkNames);
             provider.setPkProvider(pkProvider);
             provider.setTable(tableName);

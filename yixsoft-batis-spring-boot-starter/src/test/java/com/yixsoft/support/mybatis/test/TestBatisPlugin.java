@@ -3,6 +3,7 @@ package com.yixsoft.support.mybatis.test;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.yixsoft.support.mybatis.test.mappers.BasicLogMapper;
+import com.yixsoft.support.mybatis.test.mappers.ExampleEntityMapper;
 import com.yixsoft.support.mybatis.test.mappers.Log2Mapper;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ import java.util.Map;
 public class TestBatisPlugin {
     private BasicLogMapper logMapper;
     private Log2Mapper log2Mapper;
+    private ExampleEntityMapper expMapper;
 
     @Test
     @Rollback
@@ -85,7 +88,18 @@ public class TestBatisPlugin {
 
         LogEntity log3 = new LogEntity().setUserid(123).setContent("bar");
         logMapper.saveEntity(log3);
-        Assert.assertNotNull(log3.getId());
+
+    }
+
+    @Test
+    @Rollback
+    public void testScoreChange(){
+        ExampleDAO dao = new ExampleDAO().setCreateTime(new Date()).setGroupName("foo");
+        expMapper.save(dao);
+        Assert.assertNotNull(dao.getEntityId());
+
+        ExampleDAO dao2 = expMapper.findOne(dao.getEntityId());
+        Assert.assertEquals("foo",dao2.getGroupName());
     }
 
     @Autowired
@@ -97,6 +111,12 @@ public class TestBatisPlugin {
     @Autowired
     public TestBatisPlugin setLog2Mapper(Log2Mapper log2Mapper) {
         this.log2Mapper = log2Mapper;
+        return this;
+    }
+
+    @Autowired
+    public TestBatisPlugin setExpMapper(ExampleEntityMapper expMapper) {
+        this.expMapper = expMapper;
         return this;
     }
 }

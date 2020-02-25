@@ -1,5 +1,6 @@
 package com.yixsoft.support.mybatis.autosql.core.providers;
 
+import com.google.common.base.CaseFormat;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 
@@ -25,11 +26,17 @@ public class InsertSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
         Set<String> usedKeySet = new HashSet<>();
         for (Map.Entry<String, Object> paramItem : param.entrySet()) {
             ColumnInfo info;
+
             String key = paramItem.getKey();
-            if ((info = getTableColumnMap().get(key.toLowerCase())) != null && !usedKeySet.contains(key.toLowerCase())) {
-                VALUES(getDialect().escapeKeyword(info.getColumn()), paramItem.getValue() == null ? "null" : "#{" + key + "}");
+            String column = key;
+            if (getConfiguration().isMapUnderscoreToCamelCase()) {
+                column = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, key);
+            }
+            if ((info = getTableColumnMap().get(column)) != null && !usedKeySet.contains(column)) {
+                Object value = paramItem.getValue();
+                VALUES(getDialect().escapeKeyword(info.getColumn()), value == null ? "null" : "#{" + key + "}");
                 //in case the object has multiple key references to same column(because key in map is case sensitive)
-                usedKeySet.add(key.toLowerCase());
+                usedKeySet.add(column);
             }
         }
     }
