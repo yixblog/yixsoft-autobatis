@@ -3,6 +3,7 @@ package com.yixsoft.support.mybatis.autosql.core;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.session.Configuration;
 
 import java.util.Map;
 
@@ -18,6 +19,8 @@ public interface IAutoSqlProvider {
     void setParameter(Object parameterObject);
 
     void setTableColumns(Map<String, ColumnInfo> tableColumns);
+
+    void setConfiguration(Configuration configuration);
 
     void setDialect(ISqlDialect dialect);
 

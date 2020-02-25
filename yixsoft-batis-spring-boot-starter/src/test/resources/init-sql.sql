@@ -125,6 +125,14 @@ VALUES (1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NUL
 /*!40000 ALTER TABLE `type_table`
     ENABLE KEYS */;
 
+drop table if exists example;
+create table example(
+                        entity_id varchar(50) not null primary key ,
+                        group_name varchar(20) not null,
+                        create_time timestamp default current_timestamp,
+                        remark varchar(20) null,
+                        is_valid tinyint(1) default 1
+)engine=InnoDB;
 /*!40101 SET SQL_MODE = IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS = IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;

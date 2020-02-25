@@ -1,5 +1,6 @@
 package com.yixsoft.support.mybatis.dialects.mysql;
 
+import com.mysql.cj.MysqlType;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.autosql.dialects.SupportsDatabase;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.ibatis.session.Configuration;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 
+import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class MySqlDialect implements ISqlDialect {
         for (DescMySQLDAO column : columns) {
             ColumnInfo info = new ColumnInfo();
             info.setColumn(column.getColumnName());
-            info.setJdbcType(column.getDataType());
+            info.setJdbcType(JDBCType.valueOf(MysqlType.valueOf(column.getDataType().toUpperCase()).getJdbcType()));
             info.setAllowNull(BooleanUtils.toBoolean(column.getIsNullable()));
             infos.add(info);
         }

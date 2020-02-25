@@ -1,12 +1,14 @@
 package com.yixsoft.support.mybatis.autosql.dialects;
 
+import java.sql.JDBCType;
+
 /**
  * column info
  * Created by yixian on 2015-08-31.
  */
 public class ColumnInfo {
     private String column;
-    private String jdbcType;
+    private JDBCType jdbcType;
     private Boolean allowNull;
 
     public String getColumn() {
@@ -17,11 +19,11 @@ public class ColumnInfo {
         this.column = column;
     }
 
-    public String getJdbcType() {
+    public JDBCType getJdbcType() {
         return jdbcType;
     }
 
-    public void setJdbcType(String jdbcType) {
+    public void setJdbcType(JDBCType jdbcType) {
         this.jdbcType = jdbcType;
     }
 
