@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -20,13 +21,11 @@ public class SelectSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
 
     @Override
     protected String buildSql() {
-        if (ArrayUtils.isEmpty(excludeColumns)) {
-            SELECT("*");
-        } else {
-            Set<String> columns = getTableColumnMap().keySet();
+        Set<String> columns = getTableColumnMap().keySet();
+        if (ArrayUtils.isNotEmpty(excludeColumns)) {
             columns.removeAll(new ArrayList<>(Arrays.asList(excludeColumns)));
-            SELECT(StringUtils.join(columns, ","));
         }
+        SELECT(StringUtils.join(columns, ","));
         FROM(getTableName());
         buildWhereClause();
         if (StringUtils.isNotEmpty(addonWhereClause)) {

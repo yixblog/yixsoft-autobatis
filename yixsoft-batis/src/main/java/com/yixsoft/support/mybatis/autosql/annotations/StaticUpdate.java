@@ -1,5 +1,7 @@
 package com.yixsoft.support.mybatis.autosql.annotations;
 
+import org.springframework.core.annotation.AliasFor;
+
 import java.lang.annotation.*;
 
 /**
@@ -11,4 +13,7 @@ import java.lang.annotation.*;
 @AutoSql(value = SqlType.UPDATE)
 public @interface StaticUpdate {
     String[] value() default {};
+
+    @AliasFor(value = "ignoreNull", annotation = AutoSql.class)
+    boolean ignoreNull() default false;
 }

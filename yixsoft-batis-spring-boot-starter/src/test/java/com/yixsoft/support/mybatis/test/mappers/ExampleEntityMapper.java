@@ -6,6 +6,7 @@ import com.yixsoft.support.mybatis.autosql.annotations.AdvanceSelect;
 import com.yixsoft.support.mybatis.autosql.annotations.AutoMapper;
 import com.yixsoft.support.mybatis.autosql.annotations.AutoSql;
 import com.yixsoft.support.mybatis.autosql.annotations.SqlType;
+import com.yixsoft.support.mybatis.test.ExampleAnotherDAO;
 import com.yixsoft.support.mybatis.test.ExampleDAO;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,4 +25,10 @@ public interface ExampleEntityMapper {
 
     @AutoSql(SqlType.INSERT)
     void save(ExampleDAO entity);
+
+    @AutoSql(SqlType.UPDATE)
+    void update(ExampleDAO entity);
+
+    @AutoSql(SqlType.INSERT)
+    void save(ExampleAnotherDAO another);
 }

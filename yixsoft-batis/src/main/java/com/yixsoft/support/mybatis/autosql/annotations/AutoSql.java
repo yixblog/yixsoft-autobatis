@@ -11,4 +11,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoSql {
     SqlType value();
+
+    boolean ignoreNull() default false;
 }

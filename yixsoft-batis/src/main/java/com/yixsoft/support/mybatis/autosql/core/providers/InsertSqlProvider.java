@@ -1,6 +1,5 @@
 package com.yixsoft.support.mybatis.autosql.core.providers;
 
-import com.google.common.base.CaseFormat;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 
@@ -27,14 +26,11 @@ public class InsertSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
         for (Map.Entry<String, Object> paramItem : param.entrySet()) {
             ColumnInfo info;
 
-            String key = paramItem.getKey();
-            String column = key;
-            if (getConfiguration().isMapUnderscoreToCamelCase()) {
-                column = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, key);
-            }
+            String field = paramItem.getKey();
+            String column = findFieldReferColumn(field);
             if ((info = getTableColumnMap().get(column)) != null && !usedKeySet.contains(column)) {
                 Object value = paramItem.getValue();
-                VALUES(getDialect().escapeKeyword(info.getColumn()), value == null ? "null" : "#{" + key + "}");
+                VALUES(getDialect().escapeKeyword(info.getColumn()), value == null ? "null" : "#{" + field + "}");
                 //in case the object has multiple key references to same column(because key in map is case sensitive)
                 usedKeySet.add(column);
             }

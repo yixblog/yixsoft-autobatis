@@ -29,4 +29,6 @@ public interface IAutoSqlProvider {
     void setTable(String tableName);
 
     void setPkProvider(Class<? extends KeyGenerator> pkProvider);
+
+    void setIgnoreNullValue(boolean ignore);
 }

@@ -70,6 +70,18 @@ Types:
 - SELECT: auto generate a select sql
 - COUNT: auto generate a select count sql
 
+ignoreNull:
+
+This parameter default value is false. means auto sql generation will not ignore null value in the parameter and pass to database.
+
+If set to true, auto sql generation will skip null parameters/fields
+
+### @Column
+
+Can be marked on getter method or related field name in Java Bean. to determine which column this field was related to.
+
+Only available for parameters in AutoSql generation at the moment. Which means it will NOT work on traditional MyBatis mapper references or in MyBatis Deserialization
+
 ### Advanced
 
 #### @StaticUpdate
