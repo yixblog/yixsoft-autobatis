@@ -18,28 +18,29 @@ public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
     protected String buildSql() {
         UPDATE(getTableName());
         String[] pkNames = getPkNames();
-        Map<String,Object> param = getParam();
+        Map<String, Object> param = getParam();
         List<String> whereClauses = new ArrayList<>();
         Set<String> usedKeySet = new HashSet<>();
         for (Map.Entry<String, Object> paramItem : param.entrySet()) {
-            String key = paramItem.getKey();
+            String field = paramItem.getKey();
+            String column = findFieldReferColumn(field);
             //in case the object has multiple key references to same column(because key in map is case sensitive)
-            if (!usedKeySet.contains(key.toLowerCase())) {
-                if (ArrayUtils.contains(pkNames, key.toLowerCase())) {
+            if (!usedKeySet.contains(column)) {
+                if (ArrayUtils.contains(pkNames, column)) {
                     if (paramItem.getValue() == null) {
                         throw new AutoSqlException("when building auto update sql,primary keys must not be null");
                     }
-                    whereClauses.add(buildParamCondition(getTableColumnMap().get(key.toLowerCase()), key, paramItem.getValue()));
+                    whereClauses.add(buildParamCondition(getTableColumnMap().get(column), field, paramItem.getValue()));
                 } else {
-                    ColumnInfo info = getTableColumnMap().get(key.toLowerCase());
+                    ColumnInfo info = getTableColumnMap().get(column);
                     if (info == null) {
                         continue;
                     }
-                    String valueRefString = paramItem.getValue() == null ? "null" : "#{" + key + "}";
+                    String valueRefString = paramItem.getValue() == null ? "null" : "#{" + field + "}";
                     SET(getDialect().escapeKeyword(info.getColumn()) + "=" + valueRefString);
                 }
                 //in case the object has multiple key references to same column(because key in map is case sensitive)
-                usedKeySet.add(key.toLowerCase());
+                usedKeySet.add(column);
             }
         }
         if (whereClauses.size() < pkNames.length) {
@@ -61,4 +62,6 @@ public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
         this.staticUpdates = staticUpdates;
         return this;
     }
+
+
 }

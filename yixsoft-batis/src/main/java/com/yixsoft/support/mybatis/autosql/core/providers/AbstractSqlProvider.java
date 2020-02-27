@@ -1,19 +1,18 @@
 package com.yixsoft.support.mybatis.autosql.core.providers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.CaseFormat;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
-import org.apache.commons.lang3.ArrayUtils;
+import com.yixsoft.support.mybatis.utils.ClassFieldsDescription;
+import com.yixsoft.support.mybatis.utils.FieldDescription;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.session.Configuration;
 
+import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -21,15 +20,19 @@ import java.util.stream.Collectors;
  * Created by yixian on 2015-09-05.
  */
 public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvider {
+    private static Map<Class<?>, ClassFieldsDescription<?>> classDescCache = new ConcurrentHashMap<>();
     private Configuration configuration;
     private ISqlDialect dialect;
     private String[] pkNames;
+    private ClassFieldsDescription<?> classDesc;
+    private Map<String, FieldDescription> fieldReferences;
     private Map<String, Object> param;
     private Map<String, ColumnInfo> tableColumnMap;
     private Map<String, Object> additionalParam = new HashMap<>();
     private String tableName;
     private String builtSql;
     private Class<? extends KeyGenerator> pkProvider;
+    private boolean ignoreNullValue;
 
     @Override
     public synchronized String getSql() {
@@ -47,7 +50,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         Map<String, Object> paramObj;
         if (parameterObject == null) {
             paramObj = null;
-        } else if (isWrapperType(parameterObject.getClass()) || parameterObject instanceof CharSequence) {
+        } else if (isSingleType(parameterObject.getClass())) {
             paramObj = new HashMap<>();
             if (pkNames.length == 1) {
                 paramObj.put(pkNames[0], parameterObject);
@@ -56,13 +59,18 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
             paramObj = ((Map<?, ?>) parameterObject).entrySet()
                     .stream()
                     .filter(entry -> entry.getKey() != null)
-                    .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
+                    .filter(entry -> !ignoreNullValue || entry.getValue() != null)
+                    .collect(HashMap::new, (map, entry) -> map.put(entry.getKey().toString(), entry.getValue()), HashMap::putAll);
         } else {
-            ObjectMapper mapper = new ObjectMapper();
-            paramObj = mapper.convertValue(parameterObject, new TypeReference<Map<String, Object>>() {
-            });
+            this.classDesc = describeClass(parameterObject.getClass());
+            this.fieldReferences = classDesc.mapFields(tableColumnMap.keySet());
+            paramObj = classDesc.convertToMap(parameterObject, ignoreNullValue);
         }
         this.param = paramObj;
+    }
+
+    protected ClassFieldsDescription<?> describeClass(Class<?> type) {
+        return classDescCache.computeIfAbsent(type, ClassFieldsDescription::new);
     }
 
     @Override
@@ -110,11 +118,12 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         Set<String> usedKeySet = new HashSet<>();
         for (Map.Entry<String, Object> entry : param.entrySet()) {
             ColumnInfo columnInfo;
-            String key = entry.getKey();
-            if ((columnInfo = tableColumnMap.get(key.toLowerCase())) != null && !usedKeySet.contains(key.toLowerCase())) {
-                WHERE(buildParamCondition(columnInfo, key, entry.getValue()));
+            String columnName = findFieldReferColumn(entry.getKey());
+
+            if ((columnInfo = tableColumnMap.get(columnName)) != null && !usedKeySet.contains(columnName)) {
+                WHERE(buildParamCondition(columnInfo, columnName, entry.getValue()));
                 //in case the object has multiple key references to same column(because key in map is case sensitive)
-                usedKeySet.add(key.toLowerCase());
+                usedKeySet.add(columnName);
             }
         }
     }
@@ -135,11 +144,14 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         return builder.toString();
     }
 
-    protected String filterKeyCase(String keyName) {
-        if (configuration.isMapUnderscoreToCamelCase()) {
-            return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, keyName);
+    protected String findFieldReferColumn(String fieldName) {
+        if (fieldReferences != null) {
+            return fieldReferences.values().stream()
+                    .filter(field -> field.getFieldName().equals(fieldName))
+                    .map(FieldDescription::getMatchingColumn)
+                    .findFirst().orElse(fieldName);
         }
-        return keyName;
+        return fieldName;
     }
 
 
@@ -156,9 +168,12 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         builder.append(" in (").append(StringUtils.join(inConditions, ",")).append(")");
     }
 
-    public static boolean isWrapperType(Class<?> type) {
-        Class[] wrapperTypes = {Integer.class, Double.class, Float.class, Boolean.class, Byte.class, Short.class, Long.class, Character.class};
-        return type.isPrimitive() || ArrayUtils.contains(wrapperTypes, type);
+    public static boolean isSingleType(Class<?> type) {
+        if (type.isArray() || type.isEnum() || type.isPrimitive()) {
+            return true;
+        }
+        Class<?>[] elementTypes = {Number.class, Boolean.class, Character.class, Date.class, Instant.class, CharSequence.class, Iterable.class};
+        return Arrays.stream(elementTypes).anyMatch(eType -> eType.isAssignableFrom(type));
     }
 
     protected ISqlDialect getDialect() {
@@ -188,5 +203,10 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
 
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+    @Override
+    public void setIgnoreNullValue(boolean ignore) {
+        this.ignoreNullValue = ignore;
     }
 }

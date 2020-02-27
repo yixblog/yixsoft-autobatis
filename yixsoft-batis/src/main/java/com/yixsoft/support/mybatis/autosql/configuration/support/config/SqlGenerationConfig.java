@@ -42,6 +42,7 @@ public class SqlGenerationConfig {
     private Map<String, ColumnInfo> tableColumns;
     private final String[] excludeColumns;
     private final String addonWhereClause;
+    private final boolean ignoreNull;
     private final String[] staticUpdates;
     private final String statementId;
     private final Class resultType;
@@ -66,6 +67,7 @@ public class SqlGenerationConfig {
         tableName = autoMapperConfig.tablename();
         resultType = MapperMethodUtils.getReturnType(method);
         type = autoSqlConfig.value();
+        ignoreNull = autoSqlConfig.ignoreNull();
         StaticUpdate updateAnnotation = AnnotatedElementUtils.getMergedAnnotation(method, StaticUpdate.class);
         if (type == SqlType.UPDATE && updateAnnotation != null) {
             staticUpdates = updateAnnotation.value();
@@ -81,6 +83,7 @@ public class SqlGenerationConfig {
         Class<? extends IAutoSqlProvider> providerType = type.getProviderClass();
         try {
             IAutoSqlProvider provider = providerType.getDeclaredConstructor().newInstance();
+            provider.setIgnoreNullValue(ignoreNull);
             provider.setConfiguration(configuration);
             provider.setPkNames(pkNames);
             provider.setPkProvider(pkProvider);

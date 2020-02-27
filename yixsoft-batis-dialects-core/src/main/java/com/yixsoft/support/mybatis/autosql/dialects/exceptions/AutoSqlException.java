@@ -9,6 +9,10 @@ public class AutoSqlException extends RuntimeException {
         super(message);
     }
 
+    public AutoSqlException(Throwable cause) {
+        super(cause);
+    }
+
     public AutoSqlException(String message, Throwable cause) {
         super(message, cause);
     }

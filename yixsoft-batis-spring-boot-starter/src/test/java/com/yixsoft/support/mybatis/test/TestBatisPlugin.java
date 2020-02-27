@@ -51,8 +51,8 @@ public class TestBatisPlugin {
         Assert.assertEquals("fake count sql returns 0", 0, pageListFake.getPaginator().getTotalCount());
 
         Map<String, Object> newLog = new HashMap<>();
-        newLog.put("Content", "111");
-        newLog.put("userId", "1");
+        newLog.put("content", "111");
+        newLog.put("userid", "1");
         logMapper.save(newLog);
         String newLogId = newLog.get("id").toString();
 
@@ -93,13 +93,24 @@ public class TestBatisPlugin {
 
     @Test
     @Rollback
-    public void testScoreChange(){
+    public void testScoreChange() {
         ExampleDAO dao = new ExampleDAO().setCreateTime(new Date()).setGroupName("foo");
         expMapper.save(dao);
         Assert.assertNotNull(dao.getEntityId());
 
         ExampleDAO dao2 = expMapper.findOne(dao.getEntityId());
-        Assert.assertEquals("foo",dao2.getGroupName());
+        Assert.assertEquals("foo", dao2.getGroupName());
+
+        dao2.setGroupName("bar");
+        expMapper.update(dao2);
+        dao2 = expMapper.findOne(dao.getEntityId());
+        Assert.assertEquals("bar", dao2.getGroupName());
+
+        ExampleAnotherDAO another = new ExampleAnotherDAO().setTime(new Date()).setGname("etse");
+        expMapper.save(another);
+
+        ExampleDAO compare = expMapper.findOne(another.getEntityId());
+        Assert.assertEquals("etse", compare.getGroupName());
     }
 
     @Autowired

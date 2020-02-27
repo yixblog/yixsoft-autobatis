@@ -2,6 +2,7 @@ package com.yixsoft.support.mybatis;
 
 import com.yixsoft.support.mybatis.autosql.configuration.AutoSqlMapperConfigurator;
 import com.yixsoft.support.mybatis.autosql.configuration.IAutoSqlFactoryBean;
+import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class YixMapperFactoryBean<T> extends MapperFactoryBean<T> implements IAu
             InterfaceMapperConfigurator conf = confClass.getDeclaredConstructor().newInstance();
             configurators.add(conf);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new AutoSqlException(e);
         }
     }
 
