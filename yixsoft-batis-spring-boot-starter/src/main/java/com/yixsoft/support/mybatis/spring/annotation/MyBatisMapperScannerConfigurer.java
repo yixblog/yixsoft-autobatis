@@ -1,6 +1,7 @@
 package com.yixsoft.support.mybatis.spring.annotation;
 
 import com.yixsoft.support.mybatis.YixMapperFactoryBean;
+import org.apache.commons.lang3.ClassUtils;
 import org.mybatis.spring.mapper.ClassPathMapperScanner;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ResourceLoaderAware;
@@ -47,27 +48,31 @@ public class MyBatisMapperScannerConfigurer implements ImportBeanDefinitionRegis
         scanner.setResourceLoader(this.resourceLoader);
         scanner.setMapperFactoryBeanClass(YixMapperFactoryBean.class);
         scanner.registerFilters();
+        String classPackage = ClassUtils.getPackageName(importingClassMetadata.getClassName());
         List<String> basePackages = new ArrayList<>();
         for (String pkg : annoAttrs.getStringArray("value")) {
             if (StringUtils.hasText(pkg)) {
-                basePackages.add(pkg);
+                basePackages.add(filterPackage(pkg, classPackage));
             }
         }
         for (String pkg : annoAttrs.getStringArray("basePackages")) {
             if (StringUtils.hasText(pkg)) {
-                basePackages.add(pkg);
+                basePackages.add(filterPackage(pkg, classPackage));
             }
         }
         if (basePackages.isEmpty()) {
-            try {
-                Class<?> declaringClazz = Class.forName(importingClassMetadata.getClassName());
-                basePackages.add(declaringClazz.getPackage().getName());
-            } catch (ClassNotFoundException ignore) {
-
-            }
+            basePackages.add(classPackage);
         }
         String[] basePackagesStr = basePackages.toArray(new String[basePackages.size()]);
         scanner.scan(basePackagesStr);
+    }
+
+    private String filterPackage(String pkg, String classPackage) {
+        if (pkg.startsWith(".")) {
+            return classPackage + pkg;
+        } else {
+            return pkg;
+        }
     }
 
 
