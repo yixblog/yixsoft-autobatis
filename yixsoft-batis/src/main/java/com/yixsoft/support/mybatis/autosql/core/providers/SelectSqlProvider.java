@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -25,7 +26,7 @@ public class SelectSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
         if (ArrayUtils.isNotEmpty(excludeColumns)) {
             columns.removeAll(new ArrayList<>(Arrays.asList(excludeColumns)));
         }
-        SELECT(StringUtils.join(columns, ","));
+        SELECT(columns.stream().map(col -> getDialect().escapeKeyword(col)).collect(Collectors.joining(",")));
         FROM(getTableName());
         buildWhereClause();
         if (StringUtils.isNotEmpty(addonWhereClause)) {
