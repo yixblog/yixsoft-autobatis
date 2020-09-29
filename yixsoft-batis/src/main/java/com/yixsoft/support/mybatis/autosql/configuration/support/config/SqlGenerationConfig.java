@@ -10,9 +10,13 @@ import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.autosql.dialects.SqlDialectManager;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
 import com.yixsoft.support.mybatis.utils.MapperMethodUtils;
+import com.yixsoft.support.mybatis.utils.TypeUtils;
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +51,7 @@ public class SqlGenerationConfig {
     private final String statementId;
     private final Class resultType;
     private final SqlType type;
+    private Class<?> parameterType;
 
     public SqlGenerationConfig(MapperFactoryBean factory, Configuration configuration, String statementName, Method method) {
         statementId = statementName;
@@ -68,6 +73,7 @@ public class SqlGenerationConfig {
         resultType = MapperMethodUtils.getReturnType(method);
         type = autoSqlConfig.value();
         ignoreNull = autoSqlConfig.ignoreNull();
+        parameterType = getParameterType(method);
         StaticUpdate updateAnnotation = AnnotatedElementUtils.getMergedAnnotation(method, StaticUpdate.class);
         if (type == SqlType.UPDATE && updateAnnotation != null) {
             staticUpdates = updateAnnotation.value();
@@ -148,5 +154,33 @@ public class SqlGenerationConfig {
 
     public Class<? extends KeyGenerator> getPkProvider() {
         return pkProvider;
+    }
+
+    public Class<?> getParameterType() {
+        return parameterType;
+    }
+
+    public boolean isParameterMap() {
+        return parameterType == null || Map.class.isAssignableFrom(parameterType);
+    }
+
+    private Class<?> getParameterType(Method method) {
+        Class<?> parameterType = null;
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        for (Class<?> currentParameterType : parameterTypes) {
+            if (!RowBounds.class.isAssignableFrom(currentParameterType) && !ResultHandler.class.isAssignableFrom(currentParameterType)) {
+                if (parameterType == null) {
+                    if (TypeUtils.isSingleType(currentParameterType) || Map.class.isAssignableFrom(currentParameterType)) {
+                        parameterType = MapperMethod.ParamMap.class;
+                    } else {
+                        parameterType = currentParameterType;
+                    }
+                } else {
+                    // issue #135
+                    parameterType = MapperMethod.ParamMap.class;
+                }
+            }
+        }
+        return parameterType;
     }
 }

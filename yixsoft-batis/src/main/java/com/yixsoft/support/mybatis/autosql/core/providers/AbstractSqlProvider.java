@@ -5,6 +5,7 @@ import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.utils.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.utils.FieldDescription;
+import com.yixsoft.support.mybatis.utils.TypeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.jdbc.SQL;
@@ -20,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by yixian on 2015-09-05.
  */
 public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvider {
-    private static Map<Class<?>, ClassFieldsDescription<?>> classDescCache = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, ClassFieldsDescription<?>> classDescCache = new ConcurrentHashMap<>();
     private Configuration configuration;
     private ISqlDialect dialect;
     private String[] pkNames;
@@ -28,7 +29,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
     private Map<String, FieldDescription> fieldReferences;
     private Map<String, Object> param;
     private Map<String, ColumnInfo> tableColumnMap;
-    private Map<String, Object> additionalParam = new HashMap<>();
+    private final Map<String, Object> additionalParam = new HashMap<>();
     private String tableName;
     private String builtSql;
     private Class<? extends KeyGenerator> pkProvider;
@@ -50,7 +51,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         Map<String, Object> paramObj;
         if (parameterObject == null) {
             paramObj = null;
-        } else if (isSingleType(parameterObject.getClass())) {
+        } else if (TypeUtils.isSingleType(parameterObject.getClass())) {
             paramObj = new HashMap<>();
             if (pkNames.length == 1) {
                 paramObj.put(pkNames[0], parameterObject);
@@ -166,14 +167,6 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
             additionalParam.put(additionalKey, array[i]);
         }
         builder.append(" in (").append(StringUtils.join(inConditions, ",")).append(")");
-    }
-
-    public static boolean isSingleType(Class<?> type) {
-        if (type.isArray() || type.isEnum() || type.isPrimitive()) {
-            return true;
-        }
-        Class<?>[] elementTypes = {Number.class, Boolean.class, Character.class, Date.class, Instant.class, CharSequence.class, Iterable.class};
-        return Arrays.stream(elementTypes).anyMatch(eType -> eType.isAssignableFrom(type));
     }
 
     protected ISqlDialect getDialect() {

@@ -3,6 +3,7 @@ package com.yixsoft.support.mybatis.test;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.yixsoft.support.mybatis.test.mappers.BasicLogMapper;
+import com.yixsoft.support.mybatis.test.mappers.ExampleAutoEntityMapper;
 import com.yixsoft.support.mybatis.test.mappers.ExampleEntityMapper;
 import com.yixsoft.support.mybatis.test.mappers.Log2Mapper;
 import org.junit.Assert;
@@ -30,6 +31,7 @@ public class TestBatisPlugin {
     private BasicLogMapper logMapper;
     private Log2Mapper log2Mapper;
     private ExampleEntityMapper expMapper;
+    private ExampleAutoEntityMapper expAutoIdMapper;
 
     @Test
     @Rollback
@@ -89,6 +91,7 @@ public class TestBatisPlugin {
         LogEntity log3 = new LogEntity().setUserid(123).setContent("bar");
         logMapper.saveEntity(log3);
 
+
     }
 
     @Test
@@ -113,6 +116,14 @@ public class TestBatisPlugin {
         Assert.assertEquals("etse", compare.getGroupName());
     }
 
+    @Test
+    @Rollback
+    public void testAutoIdWithCamelCase() {
+        ExampleAutoIdDAO dao = new ExampleAutoIdDAO().setCreateTime(new Date()).setGroupName("foo");
+        expAutoIdMapper.save(dao);
+        Assert.assertNotNull(dao.getEntityId());
+    }
+
     @Autowired
     public TestBatisPlugin setLogMapper(BasicLogMapper logMapper) {
         this.logMapper = logMapper;
@@ -128,6 +139,12 @@ public class TestBatisPlugin {
     @Autowired
     public TestBatisPlugin setExpMapper(ExampleEntityMapper expMapper) {
         this.expMapper = expMapper;
+        return this;
+    }
+
+    @Autowired
+    public TestBatisPlugin setExpAutoIdMapper(ExampleAutoEntityMapper expAutoIdMapper) {
+        this.expAutoIdMapper = expAutoIdMapper;
         return this;
     }
 }

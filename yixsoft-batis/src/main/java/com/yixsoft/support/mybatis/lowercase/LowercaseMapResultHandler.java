@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by yixian on 2015-08-31.
  */
 public class LowercaseMapResultHandler implements ResultHandler {
-    private List<Object> result = new ArrayList<>();
+    private final List<Object> result = new ArrayList<>();
 
     @Override
     public void handleResult(ResultContext resultContext) {
