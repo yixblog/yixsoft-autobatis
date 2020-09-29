@@ -118,7 +118,7 @@
             </activation>
             <properties>
                 <gpg.executable>gpg</gpg.executable>
-                <gpg.keyname>E873609F1A25E3BCEBEC4D8B2A01174347EE1793</gpg.keyname>
+                <gpg.keyname>164F23DBB9E694727022B86655236F4E2E7F1BBC</gpg.keyname>
             </properties>
             <build>
                 <plugins>
