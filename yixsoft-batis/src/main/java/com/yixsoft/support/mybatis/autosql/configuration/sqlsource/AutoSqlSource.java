@@ -5,7 +5,6 @@ import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.utils.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.utils.FieldDescription;
 import com.yixsoft.support.mybatis.utils.ResultMapUtils;
-import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.BoundSql;
@@ -13,8 +12,6 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 
 import java.lang.reflect.Constructor;

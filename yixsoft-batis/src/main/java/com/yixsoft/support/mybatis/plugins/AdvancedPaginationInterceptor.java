@@ -36,22 +36,28 @@ import java.util.concurrent.FutureTask;
         args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class AdvancedPaginationInterceptor implements Interceptor {
     private static Logger logger = LoggerFactory.getLogger(AdvancedPaginationInterceptor.class);
-    static int MAPPED_STATEMENT_INDEX = 0;
-    static int PARAMETER_INDEX = 1;
-    static int ROWBOUNDS_INDEX = 2;
-    static int RESULT_HANDLER_INDEX = 3;
+    static final int MAPPED_STATEMENT_INDEX = 0;
+    static final int PARAMETER_INDEX = 1;
+    static final int ROWBOUNDS_INDEX = 2;
+    static final int RESULT_HANDLER_INDEX = 3;
+    private final boolean enabled;
+
+    public AdvancedPaginationInterceptor(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+        if (enabled) {
+            final Object[] queryArgs = invocation.getArgs();
+            final MappedStatement ms = (MappedStatement) queryArgs[MAPPED_STATEMENT_INDEX];
 
-        final Object[] queryArgs = invocation.getArgs();
-        final MappedStatement ms = (MappedStatement) queryArgs[MAPPED_STATEMENT_INDEX];
-
-        final Object parameter = queryArgs[PARAMETER_INDEX];
-        String statementId = ms.getId();
-        MappedStatement countStatement = AdvancedPaginationConfigHandler.getHandler().resolveCountStatement(ms.getConfiguration(), statementId, parameter);
-        if (countStatement != null) {
-            return proceedAdvancedPagination(invocation, countStatement, queryArgs);
+            final Object parameter = queryArgs[PARAMETER_INDEX];
+            String statementId = ms.getId();
+            MappedStatement countStatement = AdvancedPaginationConfigHandler.getHandler().resolveCountStatement(ms.getConfiguration(), statementId, parameter);
+            if (countStatement != null) {
+                return proceedAdvancedPagination(invocation, countStatement, queryArgs);
+            }
         }
         return invocation.proceed();
     }

@@ -10,7 +10,9 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoSql {
-    SqlType value();
+    SqlType[] value() default {};
+
+    cn.yixblog.support.mybatis.autosql.annotations.SqlType[] type() default {};
 
     boolean ignoreNull() default false;
 }

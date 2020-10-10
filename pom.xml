@@ -13,7 +13,7 @@
     <url>https://github.com/yixblog/yixsoft-autobatis/wiki</url>
 
     <properties>
-        <revision>1.0.9</revision>
+        <revision>1.0.10</revision>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -33,7 +33,7 @@
         <module>yixsoft-batis-dialect-mysql</module>
         <module>yixsoft-batis-dialects-core</module>
         <module>yixsoft-batis-dialect-oracle</module>
-
+        <module>yixsoft-cnadapter</module>
     </modules>
     <dependencies>
         <dependency>
@@ -100,6 +100,16 @@
                     <url>http://nexus.yixsoft.com/content/repositories/snapshots</url>
                 </snapshotRepository>
             </distributionManagement>
+            <repositories>
+                <repository>
+                    <id>yix_aliyun_nexus</id>
+                    <name>aliyun_nexus</name>
+                    <url>http://nexus.yixsoft.com/content/groups/public/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
         </profile>
         <profile>
             <id>github</id>

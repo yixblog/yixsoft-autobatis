@@ -10,17 +10,17 @@ import java.lang.annotation.*;
  * Created by yixian on 2015-08-27.
  */
 @Documented
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE,ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoMapper {
-    String tablename();
+    String tablename() default "";
 
     /**
      * primary columns
      *
      * @return pkName
      */
-    String[] pkName();
+    String[] pkName() default {};
 
     /**
      * if the primary key auto increment

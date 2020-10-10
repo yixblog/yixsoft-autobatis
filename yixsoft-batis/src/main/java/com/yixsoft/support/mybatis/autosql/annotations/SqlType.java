@@ -15,8 +15,8 @@ public enum SqlType {
     DELETE(DeleteSqlProvider.class, SqlCommandType.DELETE),
     COUNT(CountSqlProvider.class, SqlCommandType.SELECT);
 
-    private Class<? extends IAutoSqlProvider> providerClass;
-    private SqlCommandType commondType;
+    private final Class<? extends IAutoSqlProvider> providerClass;
+    private final SqlCommandType commondType;
 
     SqlType(Class<? extends IAutoSqlProvider> providerClass, SqlCommandType commondType) {
         this.providerClass = providerClass;

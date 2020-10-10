@@ -11,6 +11,7 @@ import com.yixsoft.support.mybatis.autosql.dialects.SqlDialectManager;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
 import com.yixsoft.support.mybatis.utils.MapperMethodUtils;
 import com.yixsoft.support.mybatis.utils.TypeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -21,6 +22,7 @@ import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.util.Assert;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -51,13 +53,14 @@ public class SqlGenerationConfig {
     private final String statementId;
     private final Class resultType;
     private final SqlType type;
-    private Class<?> parameterType;
+    private final Class<?> parameterType;
 
     public SqlGenerationConfig(MapperFactoryBean factory, Configuration configuration, String statementName, Method method) {
         statementId = statementName;
         this.parentFactory = factory;
         this.configuration = configuration;
         AutoSql autoSqlConfig = AnnotatedElementUtils.getMergedAnnotation(method, AutoSql.class);
+        Assert.notNull(autoSqlConfig, "Annotation not recognized on method " + method);
         AdvanceSelect advanceSelect = AnnotatedElementUtils.getMergedAnnotation(method, AdvanceSelect.class);
         if (advanceSelect != null) {
             excludeColumns = advanceSelect.excludeColumns();
@@ -66,12 +69,23 @@ public class SqlGenerationConfig {
             excludeColumns = null;
             addonWhereClause = "";
         }
-        AutoMapper autoMapperConfig = method.getDeclaringClass().getAnnotation(AutoMapper.class);
+        AutoMapper autoMapperConfig = AnnotatedElementUtils.getMergedAnnotation(method.getDeclaringClass(), AutoMapper.class);
+        Assert.notNull(autoMapperConfig, "AutoMapper config not found on method " + method);
         pkNames = autoMapperConfig.pkName();
+        Assert.isTrue(pkNames.length > 0, "Must provide more than 1 pkname on statement " + statementName);
         pkProvider = autoMapperConfig.keyGenerator();
         tableName = autoMapperConfig.tablename();
+        Assert.isTrue(StringUtils.isNotEmpty(tableName), "Must provide tablename on statement " + statementName);
         resultType = MapperMethodUtils.getReturnType(method);
-        type = autoSqlConfig.value();
+        SqlType[] sqlTypes = autoSqlConfig.value();
+        if (sqlTypes.length == 0) {
+            cn.yixblog.support.mybatis.autosql.annotations.SqlType[] originSqlTypes = autoSqlConfig.type();
+            if (originSqlTypes.length == 1) {
+                sqlTypes = new SqlType[]{originSqlTypes[0].convertSqlType()};
+            }
+        }
+        Assert.isTrue(sqlTypes.length == 1, String.format("Invalid SqlType config on method %s, must provide only 1 type", method));
+        type = sqlTypes[0];
         ignoreNull = autoSqlConfig.ignoreNull();
         parameterType = getParameterType(method);
         StaticUpdate updateAnnotation = AnnotatedElementUtils.getMergedAnnotation(method, StaticUpdate.class);

@@ -4,7 +4,8 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 
-public class TypeUtils {
+public final class TypeUtils {
+    private TypeUtils(){}
     public static boolean isSingleType(Class<?> type) {
         if (type.isArray() || type.isEnum() || type.isPrimitive()) {
             return true;

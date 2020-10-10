@@ -1,4 +1,5 @@
-package com.yixsoft.support.mybatis.autosql.annotations;
+package cn.yixblog.support.mybatis.autosql.annotations;
+
 
 import org.springframework.core.annotation.AliasFor;
 
@@ -10,14 +11,16 @@ import java.lang.annotation.*;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD,ElementType.ANNOTATION_TYPE})
-@AutoSql(value = SqlType.SELECT)
+@Target(ElementType.METHOD)
+@com.yixsoft.support.mybatis.autosql.annotations.AdvanceSelect
+@Deprecated
 public @interface AdvanceSelect {
     /**
      * columns declared in this param will not appears in the auto-generated sql
      *
      * @return excluded columns in result set
      */
+    @AliasFor(value = "excludeColumns", annotation = com.yixsoft.support.mybatis.autosql.annotations.AdvanceSelect.class)
     String[] excludeColumns() default {};
 
     /**
@@ -25,8 +28,9 @@ public @interface AdvanceSelect {
      *
      * @return addition where clauses
      */
+    @AliasFor(value = "addonWhereClause", annotation = com.yixsoft.support.mybatis.autosql.annotations.AdvanceSelect.class)
     String addonWhereClause() default "";
 
-    @AliasFor(value = "ignoreNull", annotation = AutoSql.class)
+    @AliasFor(value = "ignoreNull", annotation = com.yixsoft.support.mybatis.autosql.annotations.AdvanceSelect.class)
     boolean ignoreNull() default false;
 }

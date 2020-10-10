@@ -6,7 +6,6 @@ import com.yixsoft.support.mybatis.autosql.dialects.SqlDialectManager;
 import com.yixsoft.support.mybatis.autosql.dialects.SupportsDatabase;
 import org.apache.ibatis.session.Configuration;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.Assert;
@@ -16,7 +15,6 @@ import java.util.Properties;
 /**
  * Create by davep at 2019-12-17 18:28
  */
-@ConfigurationProperties(prefix = "mybatis")
 public class YixMyBatisConfig implements InitializingBean {
     private String configLocation;
     private Properties configurationProperties;

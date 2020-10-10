@@ -1,5 +1,6 @@
-package com.yixsoft.support.mybatis.autosql.annotations;
+package cn.yixblog.support.mybatis.autosql.annotations;
 
+import com.yixsoft.support.mybatis.autosql.annotations.AutoSql;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
@@ -9,9 +10,11 @@ import java.lang.annotation.*;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
-@AutoSql(value = SqlType.UPDATE)
+@Target(ElementType.METHOD)
+@com.yixsoft.support.mybatis.autosql.annotations.StaticUpdate
+@Deprecated
 public @interface StaticUpdate {
+    @AliasFor(value = "value", annotation = com.yixsoft.support.mybatis.autosql.annotations.StaticUpdate.class)
     String[] value() default {};
 
     @AliasFor(value = "ignoreNull", annotation = AutoSql.class)

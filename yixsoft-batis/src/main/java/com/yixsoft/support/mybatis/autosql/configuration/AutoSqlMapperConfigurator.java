@@ -18,7 +18,7 @@ public class AutoSqlMapperConfigurator implements InterfaceMapperConfigurator {
 
     @Override
     public void config(MapperFactoryBean factory, Class mapperInterface) {
-        if (mapperInterface.isAnnotationPresent(AutoMapper.class)) {
+        if (AnnotatedElementUtils.isAnnotated(mapperInterface, AutoMapper.class)) {
             Configuration configuration = factory.getSqlSession().getConfiguration();
             for (Method method : mapperInterface.getDeclaredMethods()) {
                 String statementName = InterfaceMapperConfigurator.getMethodStatementName(mapperInterface, method);

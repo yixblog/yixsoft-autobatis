@@ -19,8 +19,8 @@ import java.util.List;
  * Created by yixian on 2015-09-01.
  */
 public class YixMapperFactoryBean<T> extends MapperFactoryBean<T> implements IAutoSqlFactoryBean, FactoryBean<T> {
-    private Logger log = LoggerFactory.getLogger(getClass());
-    private static List<InterfaceMapperConfigurator> configurators = new ArrayList<>();
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private static final List<InterfaceMapperConfigurator> configurators = new ArrayList<>();
 
     static {
         registerConfiguration(AutoSqlMapperConfigurator.class);
