@@ -13,9 +13,10 @@ import java.util.Map;
  * Created by yixian on 2015-09-02.
  */
 public class SqlDialectManager {
+    private SqlDialectManager(){}
     private static final Map<String, Class<? extends ISqlDialect>> dialectMap = new HashMap<>();
 
-    public static ISqlDialect getDialect(MapperFactoryBean parentFactory, String name) {
+    public static synchronized ISqlDialect getDialect(MapperFactoryBean parentFactory, String name) {
         Class<? extends ISqlDialect> clazz = findDialect(name.toLowerCase());
         if (clazz == null) {
             throw new AutoSqlException("Dialect not found:" + name);
