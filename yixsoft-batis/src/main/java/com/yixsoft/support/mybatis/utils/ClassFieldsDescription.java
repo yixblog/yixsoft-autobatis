@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,14 @@ public class ClassFieldsDescription<T> {
     public Map<String, Object> convertToMap(Object instance, boolean ignoreNullValue) {
         Assert.notNull(instance, "Instance should not be null");
         return fields.stream()
-                .map(field -> new KeyValuePair<>(field.getFieldName(), field.readField(instance)))
+                .map(field -> {
+                    try {
+                        return new KeyValuePair<>(field.getFieldName(), field.readField(instance));
+                    } catch (InvocationTargetException | IllegalAccessException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .filter(pair -> !ignoreNullValue || pair.valueNotNull())
                 .collect(HashMap::new, (map, pair) -> map.put(pair.getKey(), pair.getValue()), HashMap::putAll);
     }

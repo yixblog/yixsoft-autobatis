@@ -27,7 +27,10 @@ public class MySqlDialect implements ISqlDialect {
     @Override
     public void init(MapperFactoryBean parentFactory) {
         Configuration configuration = parentFactory.getSqlSession().getConfiguration();
-        if (!configuration.hasMapper(DescMySqlTableMapper.class)) {
+        if (configuration.hasMapper(DescMySqlTableMapper.class)) {
+            tableMapper = configuration.getMapper(DescMySqlTableMapper.class, parentFactory.getSqlSession());
+            return;
+        } else {
             configuration.addMapper(DescMySqlTableMapper.class);
         }
         MapperFactoryBean<DescMySqlTableMapper> factory = new MapperFactoryBean<>();

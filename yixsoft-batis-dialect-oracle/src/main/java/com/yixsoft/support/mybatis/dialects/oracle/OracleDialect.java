@@ -25,7 +25,10 @@ public class OracleDialect implements ISqlDialect {
     @Override
     public void init(MapperFactoryBean parentFactory) {
         Configuration configuration = parentFactory.getSqlSession().getConfiguration();
-        if (!configuration.hasMapper(OracleTableMapper.class)) {
+        if (configuration.hasMapper(OracleTableMapper.class)) {
+            tableMapper = configuration.getMapper(OracleTableMapper.class, parentFactory.getSqlSession());
+            return;
+        } else {
             configuration.addMapper(OracleTableMapper.class);
         }
         MapperFactoryBean<OracleTableMapper> factory = new MapperFactoryBean<>();
@@ -36,7 +39,7 @@ public class OracleDialect implements ISqlDialect {
         try {
             tableMapper = factory.getObject();
         } catch (Exception e) {
-            throw new AutoSqlException("Failed to init table mapper in mysql dialect");
+            throw new AutoSqlException("Failed to init table mapper in oracle dialect", e);
         }
     }
 

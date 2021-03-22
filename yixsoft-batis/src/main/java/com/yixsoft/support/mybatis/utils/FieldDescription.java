@@ -2,7 +2,6 @@ package com.yixsoft.support.mybatis.utils;
 
 import com.google.common.base.CaseFormat;
 import com.yixsoft.support.mybatis.autosql.annotations.Column;
-import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -45,12 +44,8 @@ public class FieldDescription implements Comparable<FieldDescription> {
         }
     }
 
-    public Object readField(Object instance) {
-        try {
-            return method.invoke(instance);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new AutoSqlException("Failed to invoke getter for " + getFieldName() + " in " + instance.getClass());
-        }
+    public Object readField(Object instance) throws InvocationTargetException, IllegalAccessException {
+        return method.invoke(instance);
     }
 
     private static String capitalize(String name) {
