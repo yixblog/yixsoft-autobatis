@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * mapper factory bean impl<br>
- * <p></p>
+ * <br>
  * register AutoSql Mapper methods into statements
  * Created by yixian on 2015-09-01.
  */
