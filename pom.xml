@@ -10,21 +10,21 @@
     <packaging>pom</packaging>
     <name>yixsoft-batis-plugin-parent</name>
     <description>YixSoft MyBatis AutoSql Plugin</description>
-    <url>https://github.com/yixblog/yixsoft-autobatis/wiki</url>
+    <url>https://gitee.com/yixsoft/yixsoft-autobatis/wiki</url>
 
     <properties>
-        <revision>1.0.12</revision>
+        <revision>1.0.13</revision>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <commons-lang3.version>3.9</commons-lang3.version>
-        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
-        <spring.version>5.2.1.RELEASE</spring.version>
+        <spring-boot.version>2.7.0</spring-boot.version>
+        <spring.version>5.3.20</spring.version>
         <mybatis.version>[3.5.0,)</mybatis.version>
         <jackson.version>2.10.2</jackson.version>
-        <guava.version>28.2-jre</guava.version>
+        <guava.version>31.1-jre</guava.version>
     </properties>
 
     <modules>
@@ -73,13 +73,13 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.30</version>
+                <version>1.7.36</version>
             </dependency>
 
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.11</version>
             </dependency>
 
         </dependencies>
@@ -95,19 +95,19 @@
                 <repository>
                     <id>yix_aliyun_nexus</id>
                     <name>aliyun_nexus</name>
-                    <url>http://nexus.yixsoft.com/content/repositories/cn.yixblog</url>
+                    <url>https://nexus.yixsoft.com/content/repositories/cn.yixblog</url>
                 </repository>
                 <snapshotRepository>
                     <id>yix_aliyun_nexus</id>
                     <name>aliyun nexus</name>
-                    <url>http://nexus.yixsoft.com/content/repositories/snapshots</url>
+                    <url>https://nexus.yixsoft.com/content/repositories/snapshots</url>
                 </snapshotRepository>
             </distributionManagement>
             <repositories>
                 <repository>
                     <id>yix_aliyun_nexus</id>
                     <name>aliyun_nexus</name>
-                    <url>http://nexus.yixsoft.com/content/groups/public/</url>
+                    <url>https://nexus.yixsoft.com/content/groups/public/</url>
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>

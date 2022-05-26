@@ -15,8 +15,6 @@ Any auto-generated sql will try to connect to database and get table structure. 
 As parameter was based on Map, keys will only be ignored when there is no key in the parameter names. If you give a null value,
 it will be passed as a null value.
 
-This project depends on `com.alibaba:fastjson` project. we may remove it in the future to get thinner
-
 ## Configurations
 MAVEN
 ```xml
@@ -59,7 +57,10 @@ Properties:
 - tablename: determine the table name
 - pkName: determine the primary key name/names(if you use multi-column primary key, we will not auto generate primary key)
 - keyGenerator: primary key generator. if you configured single column primary key and leave the primary key empty, we will auto generate one for you.
-Default is UUID generator. If you use auto-generated primary key, set it to `org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator`
+Available key generators:
+  - `com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider`: UUID string primary key. Which is the default choice if you leave this parameter empty. 
+  - `org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator`: Auto Increment key from Database. Usually to be a Integer or Long value.
+  - `com.yixsoft.support.mybatis.autosql.pk.SnowFlakeKeyProvider`: Snow Flake key generator. Which provides a unique Long value.
 
 ### @AutoSql
 Common auto sql annotation which should be marked on methods of mappers. and it determines which type is the AutoSql
@@ -91,7 +92,7 @@ for example, you want to execute `update foo set is_valid=0 where id=#{id}`, the
 
 so the mapping should be 
 ```java
-@AutoMapper(tablename="foo",pkName="id")
+@AutoMapper(tablename="foo", pkName="id")
 public interface FooMapper{
     @StaticUpdate("is_valid=0")
     void markDisabled(@Param("id") String id);
