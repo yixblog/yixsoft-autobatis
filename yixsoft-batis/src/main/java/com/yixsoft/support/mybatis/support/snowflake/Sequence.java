@@ -13,8 +13,7 @@ import java.util.regex.Pattern;
 /**
  * 基于Twitter的Snowflake算法实现分布式高效有序ID生产黑科技(sequence)——升级版Snowflake
  *
- * <br>
- * SnowFlake的结构如下(每部分用-分开):<br>
+ * SnowFlake的结构如下(每部分用-分开):
  * <br>
  * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000 <br>
  * <br>
@@ -30,19 +29,24 @@ import java.util.regex.Pattern;
  * <br>
  * 加起来刚好64位，为一个Long型。<br>
  * SnowFlake的优点是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞(由数据中心ID和机器ID作区分)，并且效率较高，经测试，SnowFlake每秒能够产生26万ID左右。
- * <p>
- * <p>
+ * <p></p>
+ * <p></p>
  * 特性：
- * 1.支持自定义允许时间回拨的范围<p>
- * 2.解决跨毫秒起始值每次为0开始的情况（避免末尾必定为偶数，而不便于取余使用问题）<p>
- * 3.解决高并发场景中获取时间戳性能问题<p>
- * 4.支撑根据IP末尾数据作为workerId
- * 5.时间回拨方案思考：1024个节点中分配10个点作为时间回拨序号（连续10次时间回拨的概率较小）
- * <p>
+ * <ol>
+ *     <li>支持自定义允许时间回拨的范围</li>
+ *     <li>解决跨毫秒起始值每次为0开始的情况（避免末尾必定为偶数，而不便于取余使用问题）</li>
+ *     <li>解决高并发场景中获取时间戳性能问题</li>
+ *     <li>支撑根据IP末尾数据作为workerId</li>
+ *     <li>时间回拨方案思考：1024个节点中分配10个点作为时间回拨序号（连续10次时间回拨的概率较小）</li>
+ * </ol>
+
+ * <p></p>
  * 常见问题:
- * 1.时间回拨问题
- * 2.机器id的分配和回收问题
- * 3.机器id的上限问题
+ * <ol>
+ *     <li>时间回拨问题</li>
+ *     <li>机器id的分配和回收问题</li>
+ *     <li>机器id的上限问题</li>
+ * </ol>
  *
  * @author lry
  * @version 3.0
@@ -154,6 +158,7 @@ public class Sequence {
      * 基于 MAC + PID 的 hashcode 获取16个低位
      * <p>
      * 可自定扩展
+     * </p>
      */
     protected long getMaxWorkerId(long datacenterId) {
         StringBuilder mpId = new StringBuilder();
@@ -250,7 +255,7 @@ public class Sequence {
                 return localAddress;
             }
         } catch (Throwable e) {
-            log.warn("Failed to retrieving ip address, " + e.getMessage(), e);
+            log.warn("Failed to retrieving ip address, {}", e.getMessage(), e);
         }
 
         try {
@@ -267,16 +272,16 @@ public class Sequence {
                                     return address;
                                 }
                             } catch (Throwable e) {
-                                log.warn("Failed to retrieving ip address, " + e.getMessage(), e);
+                                log.warn("Failed to retrieving ip address, {}", e.getMessage(), e);
                             }
                         }
                     } catch (Throwable e) {
-                        log.warn("Failed to retrieving ip address, " + e.getMessage(), e);
+                        log.warn("Failed to retrieving ip address, {}", e.getMessage(), e);
                     }
                 }
             }
         } catch (Throwable e) {
-            log.warn("Failed to retrieving ip address, " + e.getMessage(), e);
+            log.warn("Failed to retrieving ip address, {}", e.getMessage(), e);
         }
 
         log.error("Could not get local host ip address, will use 127.0.0.1 instead.");
