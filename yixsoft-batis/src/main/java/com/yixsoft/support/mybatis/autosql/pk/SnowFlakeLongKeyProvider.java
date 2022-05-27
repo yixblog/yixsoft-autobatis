@@ -1,8 +1,8 @@
 package com.yixsoft.support.mybatis.autosql.pk;
 
-import com.yixsoft.support.mybatis.support.snowflake.Sequence;
+import com.yixsoft.support.mybatis.support.snowflake.ljf.Sequence;
 
-public class SnowFlakeKeyProvider extends AbstractKeyProvider<Long> implements IPrimaryKeyProvider{
+public class SnowFlakeLongKeyProvider extends AbstractKeyProvider<Long> implements IPrimaryKeyProvider{
     private static final Sequence sequence = new Sequence();
     @Override
     protected Long nextKey() {

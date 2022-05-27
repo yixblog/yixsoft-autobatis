@@ -1,4 +1,4 @@
-package com.yixsoft.support.mybatis.support.snowflake;
+package com.yixsoft.support.mybatis.support.snowflake.ljf;
 
 
 import java.sql.Timestamp;

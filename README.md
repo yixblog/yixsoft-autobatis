@@ -60,7 +60,8 @@ Properties:
 Available key generators:
   - `com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider`: UUID string primary key. Which is the default choice if you leave this parameter empty. 
   - `org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator`: Auto Increment key from Database. Usually to be a Integer or Long value.
-  - `com.yixsoft.support.mybatis.autosql.pk.SnowFlakeKeyProvider`: Snow Flake key generator. Which provides a unique Long value.
+  - `com.yixsoft.support.mybatis.autosql.pk.SnowFlakeLongKeyProvider`: Snow Flake key generator. Which provides a unique Long value.
+  - `com.yixsoft.support.mybatis.autosql.pk.SnowFlakeStringKeyProvider`: Snow Flake key generator. Which provides a unique String value.
 
 ### @AutoSql
 Common auto sql annotation which should be marked on methods of mappers. and it determines which type is the AutoSql
