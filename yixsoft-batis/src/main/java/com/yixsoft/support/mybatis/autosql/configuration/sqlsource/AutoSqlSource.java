@@ -29,9 +29,9 @@ public class AutoSqlSource implements SqlSource {
     private final Configuration configuration;
     private final SqlGenerationConfig genConfig;
 
-    public AutoSqlSource(MapperFactoryBean factory, String statementName, Configuration configuration, Method method) {
+    public AutoSqlSource(MapperFactoryBean factory, String statementName, Configuration configuration, Method method, Class<? extends KeyGenerator> defaultKeyGen) {
         this.configuration = configuration;
-        genConfig = new SqlGenerationConfig(factory, configuration, statementName, method);
+        genConfig = new SqlGenerationConfig(factory, configuration, statementName, method, defaultKeyGen);
     }
 
     @Override
@@ -63,15 +63,15 @@ public class AutoSqlSource implements SqlSource {
             builder.keyGenerator(keyGenerator(genConfig.getPkProvider()));
             String keyColumn = pkNames[0];
             builder.keyColumn(keyColumn);
-            if (genConfig.isParameterMap()){
+            if (genConfig.isParameterMap()) {
                 builder.keyProperty(keyColumn);
-            }else {
+            } else {
                 Class<?> parameterType = genConfig.getParameterType();
                 ClassFieldsDescription desc = new ClassFieldsDescription(parameterType);
                 FieldDescription field = desc.findMatchField(keyColumn);
-                if (field!=null) {
+                if (field != null) {
                     builder.keyProperty(field.getFieldName());
-                }else {
+                } else {
                     builder.keyProperty(keyColumn);
                 }
             }
@@ -83,7 +83,8 @@ public class AutoSqlSource implements SqlSource {
         try {
             Constructor<? extends KeyGenerator> constructor = keyGenType.getDeclaredConstructor();
             return constructor.newInstance();
-        } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+        } catch (InstantiationException | InvocationTargetException | IllegalAccessException |
+                 NoSuchMethodException e) {
             throw new RuntimeException("Failed to init key generator due to no empty constructors", e);
         }
     }

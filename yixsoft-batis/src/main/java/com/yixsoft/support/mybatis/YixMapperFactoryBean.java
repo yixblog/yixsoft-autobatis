@@ -3,6 +3,7 @@ package com.yixsoft.support.mybatis;
 import com.yixsoft.support.mybatis.autosql.configuration.AutoSqlMapperConfigurator;
 import com.yixsoft.support.mybatis.autosql.configuration.IAutoSqlFactoryBean;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class YixMapperFactoryBean<T> extends MapperFactoryBean<T> implements IAutoSqlFactoryBean, FactoryBean<T> {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private static Class<? extends KeyGenerator> defaultKeyGen;
     private static final List<InterfaceMapperConfigurator> configurators = new ArrayList<>();
 
     static {
@@ -33,6 +35,10 @@ public class YixMapperFactoryBean<T> extends MapperFactoryBean<T> implements IAu
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new AutoSqlException(e);
         }
+    }
+
+    public static void setDefaultKeyGen(Class<? extends KeyGenerator> defaultKeyGen) {
+        YixMapperFactoryBean.defaultKeyGen = defaultKeyGen;
     }
 
     public YixMapperFactoryBean() {
@@ -54,7 +60,7 @@ public class YixMapperFactoryBean<T> extends MapperFactoryBean<T> implements IAu
     public void attachAutoSqlStatements() {
         Class mapperInterface = getMapperInterface();
         for (InterfaceMapperConfigurator conf : configurators) {
-            conf.config(this, mapperInterface);
+            conf.config(this, mapperInterface, defaultKeyGen);
         }
     }
 

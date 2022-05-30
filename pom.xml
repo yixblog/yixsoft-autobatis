@@ -13,7 +13,7 @@
     <url>https://gitee.com/yixsoft/yixsoft-autobatis/wiki</url>
 
     <properties>
-        <revision>1.0.16-SNAPSHOT</revision>
+        <revision>1.0.16</revision>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>

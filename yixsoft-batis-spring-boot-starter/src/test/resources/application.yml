@@ -6,6 +6,7 @@ spring:
     password: netyixian
 debug: true
 mybatis:
+  default-key-generator: com.yixsoft.support.mybatis.autosql.pk.SnowFlakeStringKeyProvider
   configuration:
     mapUnderscoreToCamelCase: true
   dialects:

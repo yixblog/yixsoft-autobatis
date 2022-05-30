@@ -27,6 +27,6 @@ public @interface AutoMapper {
      *
      * @return boolean value
      */
-    Class<? extends KeyGenerator> keyGenerator() default UUIDPkProvider.class;
+    Class<? extends KeyGenerator> keyGenerator() default KeyGenerator.class;
 
 }

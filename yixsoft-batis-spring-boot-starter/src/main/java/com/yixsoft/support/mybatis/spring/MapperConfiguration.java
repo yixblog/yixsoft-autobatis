@@ -1,6 +1,7 @@
 package com.yixsoft.support.mybatis.spring;
 
 import com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor;
+import com.yixsoft.support.mybatis.YixMapperFactoryBean;
 import com.yixsoft.support.mybatis.plugins.AdvancedPaginationInterceptor;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
@@ -36,28 +37,15 @@ import javax.sql.DataSource;
 @AutoConfigureBefore(
         name = {"org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration"}
 )
-public class MapperConfiguration implements InitializingBean {
+public class MapperConfiguration {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ResourceLoader resourceLoader;
-    private YixMyBatisConfig config;
     private final DatabaseIdProvider databaseIdProvider;
 
     public MapperConfiguration(ResourceLoader resourceLoader,
                                ObjectProvider<DatabaseIdProvider> databaseIdProviders) {
         this.resourceLoader = resourceLoader;
         this.databaseIdProvider = databaseIdProviders.getIfAvailable();
-    }
-
-    private void checkConfigFileExists() {
-        if (StringUtils.hasText(config.getConfigLocation())) {
-            Resource resource = this.resourceLoader.getResource(config.getConfigLocation());
-            Assert.state(resource.exists(), "Cannot find config location: " + resource + " (please add config file or check your Mybatis configuration)");
-        }
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        this.checkConfigFileExists();
     }
 
     @Bean
@@ -68,13 +56,15 @@ public class MapperConfiguration implements InitializingBean {
     }
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, ObjectProvider<Interceptor[]> interceptorProvider) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource,
+                                               YixMyBatisConfig config,
+                                               ObjectProvider<Interceptor[]> interceptorProvider) throws Exception {
         SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
         factory.setDataSource(dataSource);
         if (StringUtils.hasText(config.getConfigLocation())) {
             factory.setConfigLocation(this.resourceLoader.getResource(config.getConfigLocation()));
         }
-        applyConfiguration(factory);
+        applyConfiguration(factory, config);
         Interceptor[] interceptors = interceptorProvider.getIfAvailable();
         if (interceptors != null) {
             factory.setPlugins(interceptors);
@@ -85,12 +75,12 @@ public class MapperConfiguration implements InitializingBean {
         return factory.getObject();
     }
 
-    private void applyConfiguration(SqlSessionFactoryBean factory) {
+    private void applyConfiguration(SqlSessionFactoryBean factory, YixMyBatisConfig config) {
         org.apache.ibatis.session.Configuration configuration = config.getConfiguration();
         if (configuration == null && !StringUtils.hasText(config.getConfigLocation())) {
             configuration = new org.apache.ibatis.session.Configuration();
         }
-
+        YixMapperFactoryBean.setDefaultKeyGen(config.getDefaultKeyGenerator());
         factory.setConfiguration(configuration);
     }
 
@@ -102,7 +92,7 @@ public class MapperConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnProperty(value = "mybatis.paginator.enable", havingValue = "true")
-    public OffsetLimitInterceptor offsetLimitInterceptor() {
+    public OffsetLimitInterceptor offsetLimitInterceptor(YixMyBatisConfig config) {
         OffsetLimitInterceptor interceptor = new OffsetLimitInterceptor();
         config.configOffsetLimitInterceptor(interceptor);
         return interceptor;
@@ -110,14 +100,8 @@ public class MapperConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnBean(OffsetLimitInterceptor.class)
-    public AdvancedPaginationInterceptor advancedPaginationInterceptor() {
+    public AdvancedPaginationInterceptor advancedPaginationInterceptor(YixMyBatisConfig config) {
         return new AdvancedPaginationInterceptor(config.getPaginator().isEnable());
     }
 
-
-    @Autowired
-    public MapperConfiguration setConfig(YixMyBatisConfig config) {
-        this.config = config;
-        return this;
-    }
 }

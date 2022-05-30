@@ -36,6 +36,7 @@ MAVEN
 ```yaml
 # first you have to configure datasource
 mybatis:
+  default-key-generator: com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider #default key generator if not determined in mapper
   configuration: # normal mybatis configurations
     mapUnderscoreToCamelCase: true
   dialects: # auto sql dialect config, here is an example, default was empty

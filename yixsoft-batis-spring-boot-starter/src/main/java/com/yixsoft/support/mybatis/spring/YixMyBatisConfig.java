@@ -4,24 +4,32 @@ import com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.autosql.dialects.SqlDialectManager;
 import com.yixsoft.support.mybatis.autosql.dialects.SupportsDatabase;
+import com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.session.Configuration;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.Properties;
 
 /**
  * Create by davep at 2019-12-17 18:28
  */
-public class YixMyBatisConfig implements InitializingBean {
+public class YixMyBatisConfig implements InitializingBean, ResourceLoaderAware {
     private String configLocation;
     private Properties configurationProperties;
     @NestedConfigurationProperty
     private Configuration configuration;
     private PaginatorConfig paginator;
     private Class<? extends ISqlDialect>[] dialects;
+    private Class<? extends KeyGenerator> defaultKeyGenerator = UUIDPkProvider.class;
+    private ResourceLoader resourceLoader;
 
     public String getConfigLocation() {
         return configLocation;
@@ -59,6 +67,15 @@ public class YixMyBatisConfig implements InitializingBean {
         return dialects;
     }
 
+    public Class<? extends KeyGenerator> getDefaultKeyGenerator() {
+        return defaultKeyGenerator;
+    }
+
+    public YixMyBatisConfig setDefaultKeyGenerator(Class<? extends KeyGenerator> defaultKeyGenerator) {
+        this.defaultKeyGenerator = defaultKeyGenerator;
+        return this;
+    }
+
     @Override
     public void afterPropertiesSet() {
         if (paginator != null && paginator.isEnable()) {
@@ -74,6 +91,11 @@ public class YixMyBatisConfig implements InitializingBean {
                     }
                 }
             }
+        }
+
+        if (StringUtils.hasText(getConfigLocation())) {
+            Resource resource = this.resourceLoader.getResource(getConfigLocation());
+            Assert.state(resource.exists(), "Cannot find config location: " + resource + " (please add config file or check your Mybatis configuration)");
         }
     }
 
@@ -92,6 +114,11 @@ public class YixMyBatisConfig implements InitializingBean {
     public YixMyBatisConfig setPaginator(PaginatorConfig paginator) {
         this.paginator = paginator;
         return this;
+    }
+
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
     }
 
     public static class PaginatorConfig {

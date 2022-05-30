@@ -4,6 +4,7 @@ import com.yixsoft.support.mybatis.InterfaceMapperConfigurator;
 import com.yixsoft.support.mybatis.autosql.annotations.AutoMapper;
 import com.yixsoft.support.mybatis.autosql.annotations.AutoSql;
 import com.yixsoft.support.mybatis.autosql.configuration.sqlsource.AutoSqlSource;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -17,21 +18,21 @@ import java.lang.reflect.Method;
 public class AutoSqlMapperConfigurator implements InterfaceMapperConfigurator {
 
     @Override
-    public void config(MapperFactoryBean factory, Class mapperInterface) {
+    public void config(MapperFactoryBean factory, Class mapperInterface, Class<? extends KeyGenerator> defaultKeyGen) {
         if (AnnotatedElementUtils.isAnnotated(mapperInterface, AutoMapper.class)) {
             Configuration configuration = factory.getSqlSession().getConfiguration();
             for (Method method : mapperInterface.getDeclaredMethods()) {
                 String statementName = InterfaceMapperConfigurator.getMethodStatementName(mapperInterface, method);
                 if (!configuration.hasStatement(statementName) && AnnotatedElementUtils.isAnnotated(method, AutoSql.class)) {
-                    MappedStatement ms = getMethodStatement(factory, configuration, statementName, method);
+                    MappedStatement ms = getMethodStatement(factory, configuration, statementName, method, defaultKeyGen);
                     configuration.addMappedStatement(ms);
                 }
             }
         }
     }
 
-    private MappedStatement getMethodStatement(MapperFactoryBean factory, Configuration configuration, String statementName, Method method) {
-        AutoSqlSource sqlSource = new AutoSqlSource(factory, statementName, configuration, method);
+    private MappedStatement getMethodStatement(MapperFactoryBean factory, Configuration configuration, String statementName, Method method, Class<? extends KeyGenerator> defaultKeyGen) {
+        AutoSqlSource sqlSource = new AutoSqlSource(factory, statementName, configuration, method, defaultKeyGen);
         return sqlSource.createStatement();
     }
 

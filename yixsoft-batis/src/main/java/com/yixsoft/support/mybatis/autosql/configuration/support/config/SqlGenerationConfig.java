@@ -55,7 +55,7 @@ public class SqlGenerationConfig {
     private final SqlType type;
     private final Class<?> parameterType;
 
-    public SqlGenerationConfig(MapperFactoryBean factory, Configuration configuration, String statementName, Method method) {
+    public SqlGenerationConfig(MapperFactoryBean factory, Configuration configuration, String statementName, Method method, Class<? extends KeyGenerator> defaultKeyGen) {
         statementId = statementName;
         this.parentFactory = factory;
         this.configuration = configuration;
@@ -73,7 +73,12 @@ public class SqlGenerationConfig {
         Assert.notNull(autoMapperConfig, "AutoMapper config not found on method " + method);
         pkNames = autoMapperConfig.pkName();
         Assert.isTrue(pkNames.length > 0, "Must provide more than 1 pkname on statement " + statementName);
-        pkProvider = autoMapperConfig.keyGenerator();
+        Class<? extends KeyGenerator> keyGeneratorType = autoMapperConfig.keyGenerator();
+        if (keyGeneratorType.equals(KeyGenerator.class)) {
+            pkProvider = defaultKeyGen;
+        } else {
+            pkProvider = keyGeneratorType;
+        }
         tableName = autoMapperConfig.tablename();
         Assert.isTrue(StringUtils.isNotEmpty(tableName), "Must provide tablename on statement " + statementName);
         resultType = MapperMethodUtils.getReturnType(method);
