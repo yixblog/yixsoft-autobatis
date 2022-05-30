@@ -23,7 +23,7 @@ public @interface AutoMapper {
     String[] pkName() default {};
 
     /**
-     * if the primary key auto increment
+     * primary key provider
      *
      * @return boolean value
      */

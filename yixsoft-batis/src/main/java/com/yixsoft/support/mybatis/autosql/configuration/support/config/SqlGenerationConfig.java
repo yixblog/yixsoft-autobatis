@@ -122,7 +122,8 @@ public class SqlGenerationConfig {
             }
 
             return provider;
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                 InvocationTargetException e) {
             //as all sql provider was written by myself ,these exceptions shall never happen
             logger.error(e.getMessage(), e);
             return null;

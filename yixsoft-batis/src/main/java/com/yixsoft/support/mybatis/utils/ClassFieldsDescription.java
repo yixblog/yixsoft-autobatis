@@ -5,8 +5,10 @@ import org.springframework.util.Assert;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import java.beans.MethodDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,13 +49,33 @@ public class ClassFieldsDescription<T> {
 
     private static List<FieldDescription> describeFields(Class<?> cls) {
         try {
-            return Arrays.stream(Introspector.getBeanInfo(cls).getPropertyDescriptors())
-                    .map(PropertyDescriptor::getReadMethod)
+            Field[] declaredFields = cls.getDeclaredFields();
+            return Arrays.stream(Introspector.getBeanInfo(cls).getMethodDescriptors())
+                    .map(MethodDescriptor::getMethod)
+                    .filter(method -> isReaderMethod(method, declaredFields))
                     .map(FieldDescription::new)
                     .collect(Collectors.toList());
         } catch (IntrospectionException e) {
             throw new AutoSqlException("Failed to describe class " + cls.getName(), e);
         }
+    }
+
+    private static boolean isReaderMethod(Method method, Field[] availableFields) {
+        if (method.getParameterCount() > 0) {
+            return false;
+        }
+        String methodName = method.getName();
+        if (methodName.equals("getClass")) {
+            return false;
+        }
+        if (methodName.matches("^get[A-Z]\\w*")) {
+            return true;
+        }
+        Class<?> returnType = method.getReturnType();
+        if (methodName.matches("^is[A-Z]\\w*") && returnType == boolean.class) {
+            return true;
+        }
+        return Arrays.stream(availableFields).anyMatch(field -> methodName.equals(field.getName()));
     }
 
     public Map<String, FieldDescription> mapFields(Set<String> columnNames) {
