@@ -48,7 +48,7 @@ public class SqlGenerationConfig {
     private Map<String, ColumnInfo> tableColumns;
     private final String[] excludeColumns;
     private final String addonWhereClause;
-    private final boolean ignoreNull;
+    private final IgnoreNullRule ignoreNull;
     private final String[] staticUpdates;
     private final String statementId;
     private final Class resultType;
@@ -91,7 +91,7 @@ public class SqlGenerationConfig {
         }
         Assert.isTrue(sqlTypes.length == 1, String.format("Invalid SqlType config on method %s, must provide only 1 type", method));
         type = sqlTypes[0];
-        ignoreNull = autoSqlConfig.ignoreNull();
+        ignoreNull = autoSqlConfig.ignoreNullRule();
         parameterType = getParameterType(method);
         StaticUpdate updateAnnotation = AnnotatedElementUtils.getMergedAnnotation(method, StaticUpdate.class);
         if (type == SqlType.UPDATE && updateAnnotation != null) {
@@ -108,7 +108,7 @@ public class SqlGenerationConfig {
         Class<? extends IAutoSqlProvider> providerType = type.getProviderClass();
         try {
             IAutoSqlProvider provider = providerType.getDeclaredConstructor().newInstance();
-            provider.setIgnoreNullValue(ignoreNull);
+            provider.setIgnoreNullRule(ignoreNull);
             provider.setConfiguration(configuration);
             provider.setPkNames(pkNames);
             provider.setPkProvider(pkProvider);

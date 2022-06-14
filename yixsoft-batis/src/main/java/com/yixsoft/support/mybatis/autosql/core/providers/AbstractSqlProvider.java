@@ -1,5 +1,6 @@
 package com.yixsoft.support.mybatis.autosql.core.providers;
 
+import com.yixsoft.support.mybatis.autosql.annotations.IgnoreNullRule;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
@@ -11,7 +12,6 @@ import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.session.Configuration;
 
-import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,7 +33,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
     private String tableName;
     private String builtSql;
     private Class<? extends KeyGenerator> pkProvider;
-    private boolean ignoreNullValue;
+    private IgnoreNullRule ignoreNullRule;
 
     @Override
     public synchronized String getSql() {
@@ -57,15 +57,17 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
                 paramObj.put(pkNames[0], parameterObject);
             }
         } else if (parameterObject instanceof Map) {
+            boolean ignoreNull = ignoreNullRule == IgnoreNullRule.ALWAYS;
             paramObj = ((Map<?, ?>) parameterObject).entrySet()
                     .stream()
                     .filter(entry -> entry.getKey() != null)
-                    .filter(entry -> !ignoreNullValue || entry.getValue() != null)
+                    .filter(entry -> !ignoreNull || entry.getValue() != null)
                     .collect(HashMap::new, (map, entry) -> map.put(entry.getKey().toString(), entry.getValue()), HashMap::putAll);
         } else {
+            boolean ignoreNull = ignoreNullRule != IgnoreNullRule.NEVER;
             this.classDesc = describeClass(parameterObject.getClass());
             this.fieldReferences = classDesc.mapFields(tableColumnMap.keySet());
-            paramObj = classDesc.convertToMap(parameterObject, ignoreNullValue);
+            paramObj = classDesc.convertToMap(parameterObject, ignoreNull);
         }
         this.param = paramObj;
     }
@@ -199,7 +201,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
     }
 
     @Override
-    public void setIgnoreNullValue(boolean ignore) {
-        this.ignoreNullValue = ignore;
+    public void setIgnoreNullRule(IgnoreNullRule ignore) {
+        this.ignoreNullRule = ignore;
     }
 }

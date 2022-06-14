@@ -1,5 +1,6 @@
 package com.yixsoft.support.mybatis.autosql.core;
 
+import com.yixsoft.support.mybatis.autosql.annotations.IgnoreNullRule;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -30,5 +31,5 @@ public interface IAutoSqlProvider {
 
     void setPkProvider(Class<? extends KeyGenerator> pkProvider);
 
-    void setIgnoreNullValue(boolean ignore);
+    void setIgnoreNullRule(IgnoreNullRule ignore);
 }

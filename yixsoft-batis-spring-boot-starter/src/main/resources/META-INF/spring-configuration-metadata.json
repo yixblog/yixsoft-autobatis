@@ -1,0 +1,88 @@
+{
+  "groups": [
+    {
+      "name": "mybatis",
+      "type": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig"
+    },
+    {
+      "name": "mybatis.configuration",
+      "type": "org.apache.ibatis.session.Configuration",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig"
+    },
+    {
+      "name": "mybatis.paginator",
+      "type": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig$PaginatorConfig",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "mybatis.default-key-generator",
+      "type": "java.lang.Class",
+      "defaultValue": "com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig",
+      "description": "Global default primary key provider. Must extends org.apache.ibatis.executor.keygen.KeyGenerator"
+    },
+    {
+      "name": "mybatis.dialects",
+      "type": "java.util.List<java.lang.Class>",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig"
+    },
+    {
+      "name": "mybatis.paginator.enable",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig$PaginatorConfig"
+    },
+    {
+      "name": "mybatis.paginator.dialect",
+      "type": "java.lang.String",
+      "description": "Paginator dialect class. Must have a constructor with (MappedStatement, Object, PageBounds).",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig$PaginatorConfig"
+    },
+    {
+      "name": "mybatis.paginator.pool-max-size",
+      "type": "java.lang.Integer",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig$PaginatorConfig"
+    },
+    {
+      "name": "mybatis.paginator.async-total-count",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig$PaginatorConfig"
+    },
+    {
+      "name": "mybatis.paginator.advanced-count",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig$PaginatorConfig"
+    },
+    {
+      "name": "mybatis.configuration.mapUnderscoreToCamelCase",
+      "type": "java.lang.Boolean",
+      "defaultValue": "false",
+      "sourceType": "org.apache.ibatis.session.Configuration"
+    }
+  ],
+  "hints": [
+    {
+      "name": "mybatis.default-key-generator",
+      "values": [
+        {
+          "value": "com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider",
+          "description": "Default value if not configured. Will generate a UUID String as primary key."
+        },
+        {
+          "value": "com.yixsoft.support.mybatis.autosql.pk.SnowFlakeStringKeyProvider",
+          "description": "Generated String key with snowflake rule"
+        },
+        {
+          "value": "com.yixsoft.support.mybatis.autosql.pk.SnowFlakeLongKeyProvider",
+          "description": "Generate Long key with snowflake rule. Will be failed on 2090"
+        },
+        {
+          "value": "org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator",
+          "description": "If you use Auto-incremented key by database, choose this key"
+        }
+      ]
+    }
+  ]
+}

@@ -14,5 +14,5 @@ public @interface AutoSql {
 
     cn.yixblog.support.mybatis.autosql.annotations.SqlType[] type() default {};
 
-    boolean ignoreNull() default false;
+    IgnoreNullRule ignoreNullRule() default IgnoreNullRule.PARAM_TYPE_DETECT;
 }

@@ -94,12 +94,13 @@ class TestBatisPlugin {
     @Test
     @Rollback
     void testScoreChange() {
-        ExampleDAO dao = new ExampleDAO().setCreateTime(new Date()).setGroupName("foo");
+        ExampleDAO dao = new ExampleDAO().setGroupName("foo");
         expMapper.save(dao);
         Assertions.assertNotNull(dao.getEntityId());
 
         ExampleDAO dao2 = expMapper.findOne(dao.getEntityId());
         Assertions.assertEquals("foo", dao2.getGroupName());
+        Assertions.assertNotNull(dao2.getCreateTime());
 
         dao2.setGroupName("bar");
         expMapper.update(dao2);

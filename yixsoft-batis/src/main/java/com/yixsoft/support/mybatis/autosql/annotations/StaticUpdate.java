@@ -14,6 +14,6 @@ import java.lang.annotation.*;
 public @interface StaticUpdate {
     String[] value() default {};
 
-    @AliasFor(value = "ignoreNull", annotation = AutoSql.class)
-    boolean ignoreNull() default false;
+    @AliasFor(value = "ignoreNullRule", annotation = AutoSql.class)
+    IgnoreNullRule ignoreNullRule() default IgnoreNullRule.PARAM_TYPE_DETECT;
 }

@@ -15,3 +15,11 @@ mybatis:
     enable: true
     advanced-count: true
     dialect: com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect
+logging:
+  level:
+    root: info
+    java:
+      sql:
+        Connection: debug
+        Statement: debug
+        PreparedStatement: debug
