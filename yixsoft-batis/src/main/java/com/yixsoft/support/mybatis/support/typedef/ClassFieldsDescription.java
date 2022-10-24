@@ -1,4 +1,4 @@
-package com.yixsoft.support.mybatis.utils;
+package com.yixsoft.support.mybatis.support.typedef;
 
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
 import org.springframework.util.Assert;
@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.MethodDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,14 +48,29 @@ public class ClassFieldsDescription<T> {
         return fields;
     }
 
-    private static List<FieldDescription> describeFields(Class<?> cls) {
+    public Optional<FieldDescription> findAnnotated(Class<? extends Annotation> annotationClass) {
+        return fields.stream().filter(field -> field.findAnnotation(annotationClass) != null).findFirst();
+    }
+
+    public List<FieldDescription> listAnnotated(Class<? extends Annotation> annotationClass) {
+        return fields.stream().filter(field -> field.findAnnotation(annotationClass) != null).collect(Collectors.toList());
+    }
+
+    public Optional<FieldDescription> findField(String fieldName){
+        return fields.stream().filter(field->field.getFieldName().equals(fieldName)).findFirst();
+    }
+
+    private List<FieldDescription> describeFields(Class<?> cls) {
         try {
             Field[] declaredFields = cls.getDeclaredFields();
-            return Arrays.stream(Introspector.getBeanInfo(cls).getMethodDescriptors())
+            Map<String, FieldDescription> fieldDescriptionMap = Arrays.stream(declaredFields).map(DirectFieldDescription::new).collect(HashMap::new, (map, desc) -> map.put(desc.getFieldName(), desc), Map::putAll);
+            Map<String, FieldDescription> getterFields = Arrays.stream(Introspector.getBeanInfo(cls).getMethodDescriptors())
                     .map(MethodDescriptor::getMethod)
                     .filter(method -> isReaderMethod(method, declaredFields))
-                    .map(FieldDescription::new)
-                    .collect(Collectors.toList());
+                    .map(GetterMethodFieldDescription::new)
+                    .collect(HashMap::new, (map, desc) -> map.put(desc.getFieldName(), desc), Map::putAll);
+            fieldDescriptionMap.putAll(getterFields);
+            return new ArrayList<>(fieldDescriptionMap.values());
         } catch (IntrospectionException e) {
             throw new AutoSqlException("Failed to describe class " + cls.getName(), e);
         }
@@ -75,20 +91,12 @@ public class ClassFieldsDescription<T> {
         if (methodName.matches("^is[A-Z]\\w*") && returnType == boolean.class) {
             return true;
         }
+        if (method.getDeclaringClass().isEnum()) {
+            return true;
+        }
         return Arrays.stream(availableFields).anyMatch(field -> methodName.equals(field.getName()));
     }
 
-    public Map<String, FieldDescription> mapFields(Set<String> columnNames) {
-        return columnNames.stream()
-                .map(column -> new KeyValuePair<>(column, findMatchField(column)))
-                .filter(KeyValuePair::valueNotNull)
-                .collect(HashMap::new, (map, pair) -> map.put(pair.getKey(), pair.getValue()), HashMap::putAll);
-    }
-
-    public FieldDescription findMatchField(String name) {
-        return fields.stream().filter(desc -> desc.matchName(name))
-                .min(Comparator.comparing(FieldDescription::getMatchRank)).orElse(null);
-    }
 
     public static class KeyValuePair<V> {
         private final String key;

@@ -73,11 +73,10 @@ Types:
 - SELECT: auto generate a select sql
 - COUNT: auto generate a select count sql
 
-ignoreNull:
-
-This parameter default value is false. means auto sql generation will not ignore null value in the parameter and pass to database.
-
-If set to true, auto sql generation will skip null parameters/fields
+ignoreNullRule:
+- PARAM_TYPE_DETECT: default if not set. If parameter is a Map, auto sql will not ignore null value. Otherwise will ignore if parameter is a Java Bean
+- ALWAYS: always ignore null value.
+- NEVER: never ignore null value
 
 ### @Column
 

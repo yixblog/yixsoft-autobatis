@@ -4,8 +4,8 @@ import com.yixsoft.support.mybatis.autosql.annotations.IgnoreNullRule;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
-import com.yixsoft.support.mybatis.utils.ClassFieldsDescription;
-import com.yixsoft.support.mybatis.utils.FieldDescription;
+import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
+import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import com.yixsoft.support.mybatis.utils.TypeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -14,6 +14,7 @@ import org.apache.ibatis.session.Configuration;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -26,7 +27,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
     private ISqlDialect dialect;
     private String[] pkNames;
     private ClassFieldsDescription<?> classDesc;
-    private Map<String, FieldDescription> fieldReferences;
+    private Map<String, ColumnFieldInfo> fieldReferences;
     private Map<String, Object> param;
     private Map<String, ColumnInfo> tableColumnMap;
     private final Map<String, Object> additionalParam = new HashMap<>();
@@ -66,14 +67,17 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         } else {
             boolean ignoreNull = ignoreNullRule != IgnoreNullRule.NEVER;
             this.classDesc = describeClass(parameterObject.getClass());
-            this.fieldReferences = classDesc.mapFields(tableColumnMap.keySet());
+            this.fieldReferences = ColumnFieldInfo.mapFields(classDesc.getFields().stream().map(ColumnFieldInfo::new).collect(Collectors.toList()), tableColumnMap.keySet());
             paramObj = classDesc.convertToMap(parameterObject, ignoreNull);
         }
         this.param = paramObj;
     }
 
     protected ClassFieldsDescription<?> describeClass(Class<?> type) {
-        return classDescCache.computeIfAbsent(type, ClassFieldsDescription::new);
+        if (!classDescCache.containsKey(type)){
+            classDescCache.put(type,new ClassFieldsDescription<>(type));
+        }
+        return classDescCache.get(type);
     }
 
     @Override
@@ -151,7 +155,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         if (fieldReferences != null) {
             return fieldReferences.values().stream()
                     .filter(field -> field.getFieldName().equals(fieldName))
-                    .map(FieldDescription::getMatchingColumn)
+                    .map(ColumnFieldInfo::getMatchingColumn)
                     .findFirst().orElse(fieldName);
         }
         return fieldName;

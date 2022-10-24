@@ -2,8 +2,8 @@ package com.yixsoft.support.mybatis.autosql.configuration.sqlsource;
 
 import com.yixsoft.support.mybatis.autosql.configuration.support.config.SqlGenerationConfig;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
-import com.yixsoft.support.mybatis.utils.ClassFieldsDescription;
-import com.yixsoft.support.mybatis.utils.FieldDescription;
+import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
+import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import com.yixsoft.support.mybatis.utils.ResultMapUtils;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * auto generation sql source
@@ -67,8 +68,8 @@ public class AutoSqlSource implements SqlSource {
                 builder.keyProperty(keyColumn);
             } else {
                 Class<?> parameterType = genConfig.getParameterType();
-                ClassFieldsDescription desc = new ClassFieldsDescription(parameterType);
-                FieldDescription field = desc.findMatchField(keyColumn);
+                ClassFieldsDescription<?> desc = new ClassFieldsDescription<>(parameterType);
+                ColumnFieldInfo field = ColumnFieldInfo.findMatchField(desc.getFields().stream().map(ColumnFieldInfo::new).collect(Collectors.toList()), keyColumn);
                 if (field != null) {
                     builder.keyProperty(field.getFieldName());
                 } else {

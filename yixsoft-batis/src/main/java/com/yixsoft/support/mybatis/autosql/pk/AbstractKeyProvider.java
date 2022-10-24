@@ -1,7 +1,7 @@
 package com.yixsoft.support.mybatis.autosql.pk;
 
-import com.yixsoft.support.mybatis.utils.ClassFieldsDescription;
-import com.yixsoft.support.mybatis.utils.FieldDescription;
+import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
+import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -11,6 +11,7 @@ import org.apache.ibatis.session.Configuration;
 import java.sql.Statement;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public abstract class AbstractKeyProvider<K> implements IPrimaryKeyProvider {
     @Override
@@ -21,9 +22,8 @@ public abstract class AbstractKeyProvider<K> implements IPrimaryKeyProvider {
             final MetaObject metaParam = configuration.newMetaObject(parameter);
             String paramName = keyColumns[0];
             if (!(parameter instanceof Map)) {
-                paramName = Optional.ofNullable(new ClassFieldsDescription<>(parameter.getClass())
-                                .findMatchField(paramName))
-                        .map(FieldDescription::getFieldName)
+                paramName = Optional.ofNullable(ColumnFieldInfo.findMatchField(new ClassFieldsDescription<>(parameter.getClass()).getFields().stream().map(ColumnFieldInfo::new).collect(Collectors.toList()), paramName))
+                        .map(ColumnFieldInfo::getFieldName)
                         .orElse(paramName);
                 if (!metaParam.hasGetter(paramName)) {
                     throw new ExecutorException("No getter found for the keyProperty '" + paramName + "' in " + metaParam.getOriginalObject().getClass().getName() + ".");
