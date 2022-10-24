@@ -8,6 +8,8 @@ import com.yixsoft.support.mybatis.test.mappers.ExampleEntityMapper;
 import com.yixsoft.support.mybatis.test.mappers.Log2Mapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -25,6 +27,7 @@ import java.util.Map;
 @SpringBootTest
 @Transactional
 class TestBatisPlugin {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private BasicLogMapper logMapper;
     private Log2Mapper log2Mapper;
     private ExampleEntityMapper expMapper;
@@ -67,11 +70,11 @@ class TestBatisPlugin {
         inserted.put("id", Collections.singletonList(newLogId));
         logMapper.update(inserted);
         inserted = logMapper.findOne(newLogId);
-        Assertions.assertEquals("222", inserted.get("content"),"update when id key is array should be accepted");
+        Assertions.assertEquals("222", inserted.get("content"), "update when id key is array should be accepted");
 
         logMapper.updateContentTo333(newLogId);
         inserted = logMapper.findOne(newLogId);
-        Assertions.assertEquals("333", inserted.get("content"),"update when id key is array should be accepted");
+        Assertions.assertEquals("333", inserted.get("content"), "update when id key is array should be accepted");
 
 
         demo = logMapper.findOneShort(newLogId);
@@ -94,13 +97,15 @@ class TestBatisPlugin {
     @Test
     @Rollback
     void testScoreChange() {
-        ExampleDAO dao = new ExampleDAO().setGroupName("foo");
+        ExampleDAO dao = new ExampleDAO().setGroupName("foo").setType(EntityType.EXC_1).setValueType(EntityValueType.VIP);
         expMapper.save(dao);
         Assertions.assertNotNull(dao.getEntityId());
-
+        logger.info("example id:{}", dao.getEntityId());
         ExampleDAO dao2 = expMapper.findOne(dao.getEntityId());
         Assertions.assertEquals("foo", dao2.getGroupName());
         Assertions.assertNotNull(dao2.getCreateTime());
+        Assertions.assertEquals(EntityType.EXC_1, dao2.getType());
+        Assertions.assertEquals(EntityValueType.VIP, dao2.getValueType());
 
         dao2.setGroupName("bar");
         expMapper.update(dao2);

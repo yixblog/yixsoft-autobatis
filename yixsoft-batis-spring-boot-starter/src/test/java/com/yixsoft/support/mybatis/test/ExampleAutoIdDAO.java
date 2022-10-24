@@ -10,7 +10,7 @@ public class ExampleAutoIdDAO {
     private String groupName;
     private Date createTime;
     private String remark;
-    private boolean isValid;
+    private Boolean isValid;
 
     public ExampleAutoIdDAO() {
     }
@@ -51,11 +51,11 @@ public class ExampleAutoIdDAO {
         return this;
     }
 
-    public boolean getValid() {
+    public Boolean getValid() {
         return isValid;
     }
 
-    public ExampleAutoIdDAO setValid(boolean valid) {
+    public ExampleAutoIdDAO setValid(Boolean valid) {
         isValid = valid;
         return this;
     }

@@ -5,6 +5,7 @@ import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.autosql.dialects.SqlDialectManager;
 import com.yixsoft.support.mybatis.autosql.dialects.SupportsDatabase;
 import com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider;
+import com.yixsoft.support.mybatis.typehandlers.YixBatisEnumTypeHandler;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.session.Configuration;
 import org.springframework.beans.factory.InitializingBean;
@@ -96,6 +97,9 @@ public class YixMyBatisConfig implements InitializingBean, ResourceLoaderAware {
         if (StringUtils.hasText(getConfigLocation())) {
             Resource resource = this.resourceLoader.getResource(getConfigLocation());
             Assert.state(resource.exists(), "Cannot find config location: " + resource + " (please add config file or check your Mybatis configuration)");
+        }
+        if (configuration != null) {
+            configuration.setDefaultEnumTypeHandler(YixBatisEnumTypeHandler.class);
         }
     }
 

@@ -10,7 +10,9 @@ public class ExampleDAO {
     private String groupName;
     private Date createTime;
     private String remark;
-    private boolean isValid;
+    private EntityType type;
+    private EntityValueType valueType;
+    private Boolean isValid;
 
     public ExampleDAO() {
     }
@@ -51,11 +53,29 @@ public class ExampleDAO {
         return this;
     }
 
-    public boolean getValid() {
+    public EntityType getType() {
+        return type;
+    }
+
+    public ExampleDAO setType(EntityType type) {
+        this.type = type;
+        return this;
+    }
+
+    public EntityValueType getValueType() {
+        return valueType;
+    }
+
+    public ExampleDAO setValueType(EntityValueType valueType) {
+        this.valueType = valueType;
+        return this;
+    }
+
+    public Boolean getValid() {
         return isValid;
     }
 
-    public ExampleDAO setValid(boolean valid) {
+    public ExampleDAO setValid(Boolean valid) {
         isValid = valid;
         return this;
     }

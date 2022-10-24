@@ -29,7 +29,7 @@ public class YixBatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<
         this.enumClassType = enumClassType;
         ClassFieldsDescription<E> desc = new ClassFieldsDescription<>(enumClassType);
         valueDescription = desc.findAnnotated(EnumValue.class)
-                .orElse(desc.findField("name")
+                .orElseGet(() -> desc.findField("name")
                         //shall never happen
                         .orElseThrow(() -> new IllegalArgumentException("Enum " + enumClassType + " not annotated by enum value and has no name() method")));
         valueType = valueDescription.getFieldType();

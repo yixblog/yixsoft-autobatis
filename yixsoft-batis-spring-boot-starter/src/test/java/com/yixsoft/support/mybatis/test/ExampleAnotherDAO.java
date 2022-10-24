@@ -14,7 +14,7 @@ public class ExampleAnotherDAO {
     @Column("create_time")
     private Date time;
     private String remark;
-    private boolean isValid;
+    private Boolean isValid;
 
     public ExampleAnotherDAO() {
     }
@@ -47,11 +47,11 @@ public class ExampleAnotherDAO {
         return this;
     }
 
-    public boolean getValid() {
+    public Boolean getValid() {
         return isValid;
     }
 
-    public ExampleAnotherDAO setValid(boolean valid) {
+    public ExampleAnotherDAO setValid(Boolean valid) {
         isValid = valid;
         return this;
     }

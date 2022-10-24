@@ -3,6 +3,7 @@ package com.yixsoft.support.mybatis.spring;
 import com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor;
 import com.yixsoft.support.mybatis.YixMapperFactoryBean;
 import com.yixsoft.support.mybatis.plugins.AdvancedPaginationInterceptor;
+import com.yixsoft.support.mybatis.typehandlers.YixBatisEnumTypeHandler;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;

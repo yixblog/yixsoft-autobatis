@@ -17,7 +17,7 @@ mybatis:
     dialect: com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect
 logging:
   level:
-    root: info
+    root: debug
     java:
       sql:
         Connection: debug

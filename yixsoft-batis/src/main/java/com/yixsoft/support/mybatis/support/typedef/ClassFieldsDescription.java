@@ -10,6 +10,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,14 +57,16 @@ public class ClassFieldsDescription<T> {
         return fields.stream().filter(field -> field.findAnnotation(annotationClass) != null).collect(Collectors.toList());
     }
 
-    public Optional<FieldDescription> findField(String fieldName){
-        return fields.stream().filter(field->field.getFieldName().equals(fieldName)).findFirst();
+    public Optional<FieldDescription> findField(String fieldName) {
+        return fields.stream().filter(field -> field.getFieldName().equals(fieldName)).findFirst();
     }
 
     private List<FieldDescription> describeFields(Class<?> cls) {
         try {
             Field[] declaredFields = cls.getDeclaredFields();
-            Map<String, FieldDescription> fieldDescriptionMap = Arrays.stream(declaredFields).map(DirectFieldDescription::new).collect(HashMap::new, (map, desc) -> map.put(desc.getFieldName(), desc), Map::putAll);
+            Map<String, FieldDescription> fieldDescriptionMap = Arrays.stream(declaredFields)
+                    .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                    .map(DirectFieldDescription::new).collect(HashMap::new, (map, desc) -> map.put(desc.getFieldName(), desc), Map::putAll);
             Map<String, FieldDescription> getterFields = Arrays.stream(Introspector.getBeanInfo(cls).getMethodDescriptors())
                     .map(MethodDescriptor::getMethod)
                     .filter(method -> isReaderMethod(method, declaredFields))
@@ -80,8 +83,11 @@ public class ClassFieldsDescription<T> {
         if (method.getParameterCount() > 0) {
             return false;
         }
+        if (Modifier.isStatic(method.getModifiers())) {
+            return false;
+        }
         String methodName = method.getName();
-        if (methodName.equals("getClass")) {
+        if ("getClass".equals(methodName) || "getDeclaringClass".equals(methodName)) {
             return false;
         }
         if (methodName.matches("^get[A-Z]\\w*")) {
@@ -91,7 +97,7 @@ public class ClassFieldsDescription<T> {
         if (methodName.matches("^is[A-Z]\\w*") && returnType == boolean.class) {
             return true;
         }
-        if (method.getDeclaringClass().isEnum()) {
+        if (method.getDeclaringClass().isEnum()|| Enum.class.isAssignableFrom(method.getDeclaringClass())) {
             return true;
         }
         return Arrays.stream(availableFields).anyMatch(field -> methodName.equals(field.getName()));

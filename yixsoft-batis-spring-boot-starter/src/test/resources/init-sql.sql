@@ -130,6 +130,8 @@ create table example(
                         entity_id varchar(50) not null primary key ,
                         group_name varchar(20) not null,
                         create_time timestamp default current_timestamp,
+                        `type` varchar(10) DEFAULT NULL,
+                        `value_type` int DEFAULT NULL,
                         remark varchar(20) null,
                         is_valid tinyint(1) default 1
 )engine=InnoDB;
