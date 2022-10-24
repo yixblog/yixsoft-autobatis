@@ -84,6 +84,26 @@ Can be marked on getter method or related field name in Java Bean. to determine 
 
 Only available for parameters in AutoSql generation at the moment. Which means it will NOT work on traditional MyBatis mapper references or in MyBatis Deserialization
 
+### @EnumValue
+
+By default, Enum values will use Enum.name() as target value which saved in database. 
+
+But you can use this enum to mark a field or getter method as the enum value. Which supports both serialize and deserialize.
+
+For example, this code will mark the code value as the value stored in database.:
+
+```java
+public class MyEnum{
+    GUEST(0),MEMBER(1),VIP(2);
+    
+    @EnumValue
+    private final int code;
+    MyEnum(int code){
+        this.code = code;
+    }
+}
+```
+
 ### Advanced
 
 #### @StaticUpdate
