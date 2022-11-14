@@ -1,9 +1,9 @@
 package com.yixsoft.support.mybatis.autosql.configuration.sqlsource;
 
+import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import com.yixsoft.support.mybatis.autosql.configuration.support.config.SqlGenerationConfig;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
-import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import com.yixsoft.support.mybatis.utils.ResultMapUtils;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -17,8 +17,11 @@ import org.mybatis.spring.mapper.MapperFactoryBean;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -26,13 +29,19 @@ import java.util.stream.Collectors;
  * Created by yixian on 2015-09-02.
  */
 public class AutoSqlSource implements SqlSource {
+    private static final Map<String, SqlGenerationConfig> tables = new ConcurrentHashMap<>();
 
     private final Configuration configuration;
     private final SqlGenerationConfig genConfig;
 
+    public static Map<String, SqlGenerationConfig> getAllAutoSqlTables() {
+        return new HashMap<>(tables);
+    }
+
     public AutoSqlSource(MapperFactoryBean factory, String statementName, Configuration configuration, Method method, Class<? extends KeyGenerator> defaultKeyGen) {
         this.configuration = configuration;
         genConfig = new SqlGenerationConfig(factory, configuration, statementName, method, defaultKeyGen);
+        tables.put(genConfig.getTableName(), genConfig);
     }
 
     @Override

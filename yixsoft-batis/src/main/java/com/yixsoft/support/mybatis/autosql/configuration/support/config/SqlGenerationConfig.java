@@ -1,6 +1,7 @@
 package com.yixsoft.support.mybatis.autosql.configuration.support.config;
 
 import com.yixsoft.support.mybatis.autosql.annotations.*;
+import com.yixsoft.support.mybatis.autosql.configuration.support.TableStructureUtils;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.core.providers.CountSqlProvider;
 import com.yixsoft.support.mybatis.autosql.core.providers.SelectSqlProvider;
@@ -9,6 +10,7 @@ import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.autosql.dialects.SqlDialectManager;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
+import com.yixsoft.support.mybatis.exceptions.MissingTableException;
 import com.yixsoft.support.mybatis.utils.MapperMethodUtils;
 import com.yixsoft.support.mybatis.utils.TypeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +47,6 @@ public class SqlGenerationConfig {
     private final Configuration configuration;
     private final MapperFactoryBean parentFactory;
     private ISqlDialect dialect;
-    private Map<String, ColumnInfo> tableColumns;
     private final String[] excludeColumns;
     private final String addonWhereClause;
     private final IgnoreNullRule ignoreNull;
@@ -101,10 +102,12 @@ public class SqlGenerationConfig {
         }
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
     public IAutoSqlProvider newSqlProvider(Object parameterObject) {
-        if (tableColumns == null) {
-            loadTableColumns();
-        }
+        Map<String, ColumnInfo> tableColumns = TableStructureUtils.getTableColumns(getDialect(), tableName);
         Class<? extends IAutoSqlProvider> providerType = type.getProviderClass();
         try {
             IAutoSqlProvider provider = providerType.getDeclaredConstructor().newInstance();
@@ -135,16 +138,7 @@ public class SqlGenerationConfig {
         }
     }
 
-    private void loadTableColumns() {
-        List<ColumnInfo> columns = getDialect().selectTableColumns(tableName);
-        Map<String, ColumnInfo> columnMap = new HashMap<>();
-        for (ColumnInfo col : columns) {
-            columnMap.put(col.getColumn().toLowerCase(), col);
-        }
-        tableColumns = columnMap;
-    }
-
-    private ISqlDialect getDialect() {
+    public ISqlDialect getDialect() {
         if (dialect == null) {
             try (Connection con = configuration.getEnvironment().getDataSource().getConnection()) {
                 DatabaseMetaData metaData = con.getMetaData();

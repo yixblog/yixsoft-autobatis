@@ -37,6 +37,7 @@ MAVEN
 # first you have to configure datasource
 mybatis:
   default-key-generator: com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider #default key generator if not determined in mapper
+  enable-strict-table-check: false  # if enabled, system will scan all table annotated in AutoMapper to find if any table has not created
   configuration: # normal mybatis configurations
     mapUnderscoreToCamelCase: true
   dialects: # auto sql dialect config, here is an example, default was empty

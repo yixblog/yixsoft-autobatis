@@ -4,7 +4,6 @@ import com.google.common.base.CaseFormat;
 import com.yixsoft.support.mybatis.autosql.annotations.Column;
 import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.support.typedef.FieldDescription;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;

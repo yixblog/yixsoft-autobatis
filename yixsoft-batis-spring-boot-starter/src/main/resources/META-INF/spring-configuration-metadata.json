@@ -25,6 +25,13 @@
       "description": "Global default primary key provider. Must extends org.apache.ibatis.executor.keygen.KeyGenerator"
     },
     {
+      "name": "mybatis.enable-strict-table-check",
+      "type": "java.lang.Boolean",
+      "defaultValue": "false",
+      "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig",
+      "description": "When enabled this config, system will check if table exists immediately on startup and throw MissingTableException if table not exists."
+    },
+    {
       "name": "mybatis.dialects",
       "type": "java.util.List<java.lang.Class>",
       "sourceType": "com.yixsoft.support.mybatis.spring.YixMyBatisConfig"

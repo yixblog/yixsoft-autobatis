@@ -92,6 +92,11 @@ public class MapperConfiguration {
     }
 
     @Bean
+    public VerifyTableTask yixbatisVerifyTableTask(YixMyBatisConfig config){
+        return new VerifyTableTask(config);
+    }
+
+    @Bean
     @ConditionalOnProperty(value = "mybatis.paginator.enable", havingValue = "true")
     public OffsetLimitInterceptor offsetLimitInterceptor(YixMyBatisConfig config) {
         OffsetLimitInterceptor interceptor = new OffsetLimitInterceptor();

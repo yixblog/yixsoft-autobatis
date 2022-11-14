@@ -27,6 +27,7 @@ public class YixMyBatisConfig implements InitializingBean, ResourceLoaderAware {
     private Properties configurationProperties;
     @NestedConfigurationProperty
     private Configuration configuration;
+    private boolean enableStrictTableCheck = false;
     private PaginatorConfig paginator;
     private Class<? extends ISqlDialect>[] dialects;
     private Class<? extends KeyGenerator> defaultKeyGenerator = UUIDPkProvider.class;
@@ -123,6 +124,15 @@ public class YixMyBatisConfig implements InitializingBean, ResourceLoaderAware {
     @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
+    }
+
+    public boolean isEnableStrictTableCheck() {
+        return enableStrictTableCheck;
+    }
+
+    public YixMyBatisConfig setEnableStrictTableCheck(boolean enableStrictTableCheck) {
+        this.enableStrictTableCheck = enableStrictTableCheck;
+        return this;
     }
 
     public static class PaginatorConfig {

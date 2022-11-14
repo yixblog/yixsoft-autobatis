@@ -15,6 +15,7 @@ mybatis:
     enable: true
     advanced-count: true
     dialect: com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect
+  enable-strict-table-check: true
 logging:
   level:
     root: debug
