@@ -4,10 +4,7 @@ import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -22,7 +19,7 @@ public class SelectSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
 
     @Override
     protected String buildSql() {
-        Set<String> columns = getTableColumnMap().keySet();
+        Set<String> columns = new HashSet<>(getTableColumnMap().keySet());
         if (ArrayUtils.isNotEmpty(excludeColumns)) {
             columns.removeAll(new ArrayList<>(Arrays.asList(excludeColumns)));
         }

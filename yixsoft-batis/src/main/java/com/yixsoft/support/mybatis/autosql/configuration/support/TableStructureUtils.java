@@ -18,7 +18,7 @@ public class TableStructureUtils {
         }
         synchronized (tableStructureCache) {
             if (tableStructureCache.containsKey(tableName)) {
-                return tableStructureCache.get(tableName);
+                return new HashMap<>(tableStructureCache.get(tableName));
             }
             Map<String, ColumnInfo> structure = loadTableColumns(dialect, tableName);
             tableStructureCache.put(tableName, structure);
