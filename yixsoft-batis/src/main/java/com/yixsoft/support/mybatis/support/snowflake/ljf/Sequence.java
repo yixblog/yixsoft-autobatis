@@ -171,7 +171,7 @@ public class Sequence {
         }
 
         // MAC + PID 的 hashcode 获取16个低位
-        return (mpId.toString().hashCode()) % (maxWorkerId + 1);
+        return (mpId.toString().hashCode()) & maxWorkerId;
     }
 
     /**
