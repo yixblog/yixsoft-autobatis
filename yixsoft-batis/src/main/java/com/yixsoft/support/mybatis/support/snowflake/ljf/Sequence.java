@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 /**
  * 基于Twitter的Snowflake算法实现分布式高效有序ID生产黑科技(sequence)——升级版Snowflake
- *
+ * <p>
  * SnowFlake的结构如下(每部分用-分开):
  * <br>
  * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000 <br>
@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  *     <li>支撑根据IP末尾数据作为workerId</li>
  *     <li>时间回拨方案思考：1024个节点中分配10个点作为时间回拨序号（连续10次时间回拨的概率较小）</li>
  * </ol>
-
+ * <p>
  * 常见问题:
  * <ol>
  *     <li>时间回拨问题</li>
@@ -131,6 +131,7 @@ public class Sequence {
      * 基于网卡MAC地址计算余数作为数据中心
      * <br>
      * 可自定扩展
+     *
      * @return datacenter ID detected by IP and MAC address
      */
     protected long getDatacenterId() {
@@ -158,6 +159,7 @@ public class Sequence {
      * <p>
      * 可自定扩展
      * </p>
+     *
      * @param datacenterId referenced datacenter id
      * @return generated worker id
      */
@@ -171,7 +173,7 @@ public class Sequence {
         }
 
         // MAC + PID 的 hashcode 获取16个低位
-        return (mpId.toString().hashCode()) & maxWorkerId;
+        return (mpId.toString().hashCode() & 0xffff) % (maxWorkerId - 1);
     }
 
     /**
