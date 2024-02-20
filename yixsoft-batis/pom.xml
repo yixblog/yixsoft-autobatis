@@ -44,7 +44,10 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.yixsoft</groupId>
+            <artifactId>yixsoft-classutils</artifactId>
+        </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>

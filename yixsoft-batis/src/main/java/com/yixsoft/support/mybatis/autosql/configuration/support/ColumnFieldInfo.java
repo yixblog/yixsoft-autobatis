@@ -1,9 +1,9 @@
 package com.yixsoft.support.mybatis.autosql.configuration.support;
 
 import com.google.common.base.CaseFormat;
+import com.yixsoft.support.classutils.ClassFieldsDescription;
+import com.yixsoft.support.classutils.FieldDescription;
 import com.yixsoft.support.mybatis.autosql.annotations.Column;
-import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
-import com.yixsoft.support.mybatis.support.typedef.FieldDescription;
 
 import java.util.*;
 import java.util.stream.Collectors;

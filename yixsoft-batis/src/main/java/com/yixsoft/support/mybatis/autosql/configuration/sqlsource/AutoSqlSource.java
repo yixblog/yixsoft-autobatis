@@ -1,9 +1,9 @@
 package com.yixsoft.support.mybatis.autosql.configuration.sqlsource;
 
+import com.yixsoft.support.classutils.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import com.yixsoft.support.mybatis.autosql.configuration.support.config.SqlGenerationConfig;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
-import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.utils.ResultMapUtils;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -17,9 +17,7 @@ import org.mybatis.spring.mapper.MapperFactoryBean;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;

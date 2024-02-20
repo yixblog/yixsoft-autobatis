@@ -1,6 +1,6 @@
 package com.yixsoft.support.mybatis.autosql.pk;
 
-import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
+import com.yixsoft.support.classutils.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;

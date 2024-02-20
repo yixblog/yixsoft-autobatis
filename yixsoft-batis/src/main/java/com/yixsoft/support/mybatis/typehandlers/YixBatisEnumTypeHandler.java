@@ -1,8 +1,7 @@
 package com.yixsoft.support.mybatis.typehandlers;
 
-import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
-import com.yixsoft.support.mybatis.support.typedef.FieldDescription;
-import org.apache.commons.lang3.StringUtils;
+import com.yixsoft.support.classutils.ClassFieldsDescription;
+import com.yixsoft.support.classutils.FieldDescription;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.MyBatisSystemException;
@@ -15,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 
 public class YixBatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
     private final Class<E> enumClassType;
