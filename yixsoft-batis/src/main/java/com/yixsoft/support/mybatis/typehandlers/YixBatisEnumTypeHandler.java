@@ -2,6 +2,7 @@ package com.yixsoft.support.mybatis.typehandlers;
 
 import com.yixsoft.support.classutils.ClassFieldsDescription;
 import com.yixsoft.support.classutils.FieldDescription;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.MyBatisSystemException;
@@ -30,7 +31,11 @@ public class YixBatisEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<
                 .orElseGet(() -> desc.findField("name")
                         //shall never happen
                         .orElseThrow(() -> new IllegalArgumentException("Enum " + enumClassType + " not annotated by enum value and has no name() method")));
-        valueType = valueDescription.getFieldType();
+        Class<?> fieldType = valueDescription.getFieldType();
+        if (fieldType.isPrimitive()){
+            fieldType = ClassUtils.primitiveToWrapper(fieldType);
+        }
+        valueType = fieldType;
     }
 
     @Override
