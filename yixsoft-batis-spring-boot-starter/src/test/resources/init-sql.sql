@@ -135,6 +135,18 @@ create table example(
                         remark varchar(20) null,
                         is_valid tinyint(1) default 1
 )engine=InnoDB;
+
+drop table if exists example_auto;
+CREATE TABLE `example_auto` (
+                                `entity_id` int NOT NULL AUTO_INCREMENT,
+                                `group_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                                `remark` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+                                `is_valid` tinyint(1) DEFAULT '1',
+                                PRIMARY KEY (`entity_id`)
+) ENGINE=InnoDB;
+
+
 /*!40101 SET SQL_MODE = IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS = IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
