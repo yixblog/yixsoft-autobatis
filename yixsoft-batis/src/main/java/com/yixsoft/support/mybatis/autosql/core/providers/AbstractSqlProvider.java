@@ -1,10 +1,10 @@
 package com.yixsoft.support.mybatis.autosql.core.providers;
 
+import com.yixsoft.support.classutils.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.autosql.annotations.IgnoreNullRule;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
-import com.yixsoft.support.mybatis.support.typedef.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import com.yixsoft.support.mybatis.utils.TypeUtils;
 import org.apache.commons.lang3.StringUtils;
