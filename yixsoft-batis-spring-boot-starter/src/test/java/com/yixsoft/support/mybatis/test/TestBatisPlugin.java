@@ -2,6 +2,7 @@ package com.yixsoft.support.mybatis.test;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import com.yixsoft.support.mybatis.autosql.core.where.RangeCondition;
 import com.yixsoft.support.mybatis.test.mappers.BasicLogMapper;
 import com.yixsoft.support.mybatis.test.mappers.ExampleAutoEntityMapper;
 import com.yixsoft.support.mybatis.test.mappers.ExampleEntityMapper;
@@ -91,7 +92,11 @@ class TestBatisPlugin {
         LogEntity log3 = new LogEntity().setUserid(123).setContent("bar");
         logMapper.saveEntity(log3);
 
+        PageList<Map<String, Object>> gtList = logMapper.list(Map.of("id", new RangeCondition().greaterThan("aaa", false)), new PageBounds());
+        Assertions.assertFalse(gtList.isEmpty());
 
+        PageList<Map<String, Object>> ltList = logMapper.list(Map.of("id", new RangeCondition().lessThan("000", false)), new PageBounds());
+        Assertions.assertTrue(ltList.isEmpty());
     }
 
     @Test

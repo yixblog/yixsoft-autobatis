@@ -13,15 +13,15 @@
     <url>https://gitee.com/yixsoft/yixsoft-autobatis/wiki</url>
 
     <properties>
-        <revision>2.0.0</revision>
+        <revision>2.0.1</revision>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <commons-lang3.version>3.9</commons-lang3.version>
-        <spring-boot.version>3.2.2</spring-boot.version>
-        <spring.version>6.1.3</spring.version>
+        <spring-boot.version>3.2.3</spring-boot.version>
+        <spring.version>6.1.4</spring.version>
         <mybatis.version>[3.5.0,)</mybatis.version>
         <jackson.version>2.15.3</jackson.version>
         <guava.version>33.0.0-jre</guava.version>

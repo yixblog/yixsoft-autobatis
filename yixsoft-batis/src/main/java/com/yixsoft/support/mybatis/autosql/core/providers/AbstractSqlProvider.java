@@ -2,10 +2,14 @@ package com.yixsoft.support.mybatis.autosql.core.providers;
 
 import com.yixsoft.support.classutils.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.autosql.annotations.IgnoreNullRule;
+import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
+import com.yixsoft.support.mybatis.autosql.core.where.ArrayCondition;
+import com.yixsoft.support.mybatis.autosql.core.where.EqualsCondition;
+import com.yixsoft.support.mybatis.autosql.core.where.NullCondition;
+import com.yixsoft.support.mybatis.autosql.core.where.WhereCondition;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
-import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import com.yixsoft.support.mybatis.utils.TypeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -19,7 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * global methods here
- * Created by yixian on 2015-09-05.
+ * Created by yixian on 2015-09- 05.
  */
 public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvider {
     private static final Map<Class<?>, ClassFieldsDescription<?>> classDescCache = new ConcurrentHashMap<>();
@@ -57,9 +61,9 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
             if (pkNames.length == 1) {
                 paramObj.put(pkNames[0], parameterObject);
             }
-        } else if (parameterObject instanceof Map) {
+        } else if (parameterObject instanceof Map<?, ?> paramMap) {
             boolean ignoreNull = ignoreNullRule == IgnoreNullRule.ALWAYS;
-            paramObj = ((Map<?, ?>) parameterObject).entrySet()
+            paramObj = paramMap.entrySet()
                     .stream()
                     .filter(entry -> entry.getKey() != null)
                     .filter(entry -> !ignoreNull || entry.getValue() != null)
@@ -70,12 +74,12 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
             this.fieldReferences = ColumnFieldInfo.mapFields(classDesc.getFields().stream().map(ColumnFieldInfo::new).collect(Collectors.toList()), tableColumnMap.keySet());
             paramObj = classDesc.convertToMap(parameterObject, ignoreNull);
         }
-        this.param = paramObj;
+        this.param = paramObj == null ? null : new HashMap<>(paramObj);
     }
 
     protected ClassFieldsDescription<?> describeClass(Class<?> type) {
-        if (!classDescCache.containsKey(type)){
-            classDescCache.put(type,new ClassFieldsDescription<>(type));
+        if (!classDescCache.containsKey(type)) {
+            classDescCache.put(type, new ClassFieldsDescription<>(type));
         }
         return classDescCache.get(type);
     }
@@ -126,29 +130,30 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         for (Map.Entry<String, Object> entry : param.entrySet()) {
             ColumnInfo columnInfo;
             String columnName = findFieldReferColumn(entry.getKey());
-
             if ((columnInfo = tableColumnMap.get(columnName)) != null && !usedKeySet.contains(columnName)) {
-                WHERE(buildParamCondition(columnInfo, columnName, entry.getValue()));
+                WhereConditionBind bind = buildWhereCondition(columnInfo, columnName, entry.getValue());
+                WHERE(bind.buildWhereFragment(additionalParam));
                 //in case the object has multiple key references to same column(because key in map is case sensitive)
                 usedKeySet.add(columnName);
             }
         }
     }
 
-    protected String buildParamCondition(ColumnInfo columnInfo, String key, Object value) {
-        StringBuilder builder = new StringBuilder(dialect.escapeKeyword(columnInfo.getColumn()));
+    protected WhereConditionBind buildWhereCondition(ColumnInfo columnInfo, String key, Object value) {
+        String columnName = dialect.escapeKeyword(columnInfo.getColumn());
         if (value == null) {
-            builder.append(" is null");
-        } else if (value.getClass().isArray()) {
-            Object[] array = (Object[]) value;
-            buildInConditions(key, builder, array);
-        } else if (value instanceof Collection) {
-            Object[] array = ((Collection) value).toArray();
-            buildInConditions(key, builder, array);
-        } else {
-            builder.append("=#{").append(key).append("}");
+            return new WhereConditionBind(columnName, key, new NullCondition());
         }
-        return builder.toString();
+        if (value instanceof WhereCondition condition) {
+            return new WhereConditionBind(columnName, key, condition);
+        }
+        if (value.getClass().isArray()) {
+            return new WhereConditionBind(columnName, key, new ArrayCondition((Object[]) value));
+        }
+        if (value instanceof Collection<?> collection) {
+            return new WhereConditionBind(columnName, key, new ArrayCondition(collection));
+        }
+        return new WhereConditionBind(columnName, key, new EqualsCondition(value));
     }
 
     protected String findFieldReferColumn(String fieldName) {

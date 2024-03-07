@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ResultMapUtils {
     public static List<ResultMap> createJsonResultMap(Configuration configuration, String statementId, Class resultType) {
-        ResultMap.Builder builder = new ResultMap.Builder(configuration, statementId + "-Inline", resultType, new ArrayList<ResultMapping>());
+        ResultMap.Builder builder = new ResultMap.Builder(configuration, statementId + "-Inline", resultType, new ArrayList<>());
         ResultMap map = builder.build();
         List<ResultMap> maps = new ArrayList<>();
         maps.add(map);

@@ -32,4 +32,5 @@ public interface IAutoSqlProvider {
     void setPkProvider(Class<? extends KeyGenerator> pkProvider);
 
     void setIgnoreNullRule(IgnoreNullRule ignore);
+
 }
