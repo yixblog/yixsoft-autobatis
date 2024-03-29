@@ -4,6 +4,7 @@ import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -31,7 +32,10 @@ public class UpdateSqlProvider extends AbstractSqlProvider implements IAutoSqlPr
                         throw new AutoSqlException("when building auto update sql,primary keys must not be null");
                     }
                     WhereConditionBind bind = buildWhereCondition(getTableColumnMap().get(column), field, paramItem.getValue());
-                    whereClauses.add(bind.buildWhereFragment(getAdditionalParams()));
+                    String fragment = bind.buildWhereFragment(getAdditionalParams());
+                    if (StringUtils.isNotBlank(fragment)) {
+                        whereClauses.add(fragment);
+                    }
                 } else {
                     ColumnInfo info = getTableColumnMap().get(column);
                     if (info == null) {

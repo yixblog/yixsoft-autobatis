@@ -132,7 +132,10 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
             String columnName = findFieldReferColumn(entry.getKey());
             if ((columnInfo = tableColumnMap.get(columnName)) != null && !usedKeySet.contains(columnName)) {
                 WhereConditionBind bind = buildWhereCondition(columnInfo, columnName, entry.getValue());
-                WHERE(bind.buildWhereFragment(additionalParam));
+                String fragment = bind.buildWhereFragment(additionalParam);
+                if (StringUtils.isNotBlank(fragment)) {
+                    WHERE(fragment);
+                }
                 //in case the object has multiple key references to same column(because key in map is case sensitive)
                 usedKeySet.add(columnName);
             }

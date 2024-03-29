@@ -13,7 +13,7 @@
     <url>https://gitee.com/yixsoft/yixsoft-autobatis/wiki</url>
 
     <properties>
-        <revision>2.0.1</revision>
+        <revision>2.0.2</revision>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -25,7 +25,7 @@
         <mybatis.version>[3.5.0,)</mybatis.version>
         <jackson.version>2.15.3</jackson.version>
         <guava.version>33.0.0-jre</guava.version>
-        <yixsoft-classutils.version>1.0.1</yixsoft-classutils.version>
+        <yixsoft-classutils.version>1.0.2</yixsoft-classutils.version>
         <mybatis-spring.version>3.0.3</mybatis-spring.version>
     </properties>
 
@@ -94,9 +94,6 @@
     <profiles>
         <profile>
             <id>default</id>
-            <modules>
-                <module>yixsoft-cnadapter</module>
-            </modules>
             <distributionManagement>
                 <repository>
                     <id>yix_aliyun_nexus</id>

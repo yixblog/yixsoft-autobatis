@@ -97,6 +97,10 @@ class TestBatisPlugin {
 
         PageList<Map<String, Object>> ltList = logMapper.list(Map.of("id", new RangeCondition().lessThan("000", false)), new PageBounds());
         Assertions.assertTrue(ltList.isEmpty());
+
+        logMapper.list(Map.of("id", new RangeCondition()), new PageBounds());
+
+
     }
 
     @Test
