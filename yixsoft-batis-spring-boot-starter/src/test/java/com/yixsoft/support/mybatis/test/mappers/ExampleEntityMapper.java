@@ -20,6 +20,9 @@ public interface ExampleEntityMapper {
     @AutoSql(SqlType.SELECT)
     PageList<ExampleDAO> pageList(Map<String, Object> params, PageBounds pageBounds);
 
+    @AutoSql(SqlType.SELECT)
+    PageList<ExampleDAO> pageList2(ExampleDAO params, PageBounds pageBounds);
+
     @AdvanceSelect(addonWhereClause = "is_valid=1")
     ExampleDAO findOne(@Param("entity_id") String id);
 

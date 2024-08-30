@@ -38,6 +38,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
     private String tableName;
     private String builtSql;
     private Class<? extends KeyGenerator> pkProvider;
+    private String pkPrefix;
     private IgnoreNullRule ignoreNullRule;
 
     @Override
@@ -77,7 +78,7 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
         this.param = paramObj == null ? null : new HashMap<>(paramObj);
     }
 
-    protected ClassFieldsDescription<?> describeClass(Class<?> type) {
+    public static ClassFieldsDescription<?> describeClass(Class<?> type) {
         if (!classDescCache.containsKey(type)) {
             classDescCache.put(type, new ClassFieldsDescription<>(type));
         }
@@ -115,6 +116,11 @@ public abstract class AbstractSqlProvider extends SQL implements IAutoSqlProvide
 
     public Class<? extends KeyGenerator> getPkProvider() {
         return pkProvider;
+    }
+
+    @Override
+    public void setPkPrefix(String pkPrefix) {
+        this.pkPrefix = pkPrefix;;
     }
 
     @Override

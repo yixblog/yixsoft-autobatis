@@ -33,4 +33,5 @@ public interface IAutoSqlProvider {
 
     void setIgnoreNullRule(IgnoreNullRule ignore);
 
+    void setPkPrefix(String pkPrefix);
 }

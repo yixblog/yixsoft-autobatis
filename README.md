@@ -59,6 +59,7 @@ Properties:
 - tablename: determine the table name
 - pkName: determine the primary key name/names(if you use multi-column primary key, we will not auto generate primary key)
 - keyGenerator: primary key generator. if you configured single column primary key and leave the primary key empty, we will auto generate one for you.
+- keyPrefix: When using UUID or SnowFlake String as primary key. System will automatically add prefix to the generated primary key.
 Available key generators:
   - `com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider`: UUID string primary key. Which is the default choice if you leave this parameter empty. 
   - `org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator`: Auto Increment key from Database. Usually to be a Integer or Long value.
@@ -136,3 +137,9 @@ You can determine count sql to another mapping ref or just give the count sql to
 ## AutoSql Dialect
 Dialect class should implements `com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect`
 and be annotated by `com.yixsoft.support.mybatis.autosql.dialects.SupportsDatabase` to determine which database it supports
+
+### Known Bugs
+
+#### JavaBean shaped select parameter conflicts with RowBounds
+
+If you use RowBounds in your select sql, and the select parameter is a JavaBean. An invocation exception will be thrown. Please use Map instead.

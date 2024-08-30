@@ -29,4 +29,10 @@ public @interface AutoMapper {
      */
     Class<? extends KeyGenerator> keyGenerator() default KeyGenerator.class;
 
+    /**
+     * primary key prefix. Only valid when key generator is SnowFlakeStringKeyProvider or UUIDPkProvider.
+     * @return pk prefix
+     */
+    String keyPrefix() default "";
+
 }

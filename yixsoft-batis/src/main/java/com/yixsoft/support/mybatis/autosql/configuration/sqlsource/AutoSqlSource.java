@@ -4,6 +4,7 @@ import com.yixsoft.support.classutils.ClassFieldsDescription;
 import com.yixsoft.support.mybatis.autosql.configuration.support.ColumnFieldInfo;
 import com.yixsoft.support.mybatis.autosql.configuration.support.config.SqlGenerationConfig;
 import com.yixsoft.support.mybatis.autosql.core.IAutoSqlProvider;
+import com.yixsoft.support.mybatis.autosql.pk.SupportedPrefix;
 import com.yixsoft.support.mybatis.utils.ResultMapUtils;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -68,7 +69,7 @@ public class AutoSqlSource implements SqlSource {
         builder.resultMaps(ResultMapUtils.createJsonResultMap(configuration, genConfig.getStatementId(), genConfig.getResultType()));
         String[] pkNames = genConfig.getPkNames();
         if (genConfig.getType() == SqlCommandType.INSERT && pkNames.length == 1) {
-            builder.keyGenerator(keyGenerator(genConfig.getPkProvider()));
+            builder.keyGenerator(keyGenerator(genConfig.getPkProvider(), genConfig.getPkPrefix()));
             String keyColumn = pkNames[0];
             builder.keyColumn(keyColumn);
             if (genConfig.isParameterMap()) {
@@ -87,10 +88,14 @@ public class AutoSqlSource implements SqlSource {
         return builder.build();
     }
 
-    private KeyGenerator keyGenerator(Class<? extends KeyGenerator> keyGenType) {
+    private KeyGenerator keyGenerator(Class<? extends KeyGenerator> keyGenType, String pkPrefix) {
         try {
             Constructor<? extends KeyGenerator> constructor = keyGenType.getDeclaredConstructor();
-            return constructor.newInstance();
+            KeyGenerator keyGenerator = constructor.newInstance();
+            if (keyGenerator instanceof SupportedPrefix supportedPrefix) {
+                supportedPrefix.setPrefix(pkPrefix);
+            }
+            return keyGenerator;
         } catch (InstantiationException | InvocationTargetException | IllegalAccessException |
                  NoSuchMethodException e) {
             throw new RuntimeException("Failed to init key generator due to no empty constructors", e);

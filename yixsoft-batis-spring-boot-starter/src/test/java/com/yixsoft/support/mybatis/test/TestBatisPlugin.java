@@ -59,6 +59,8 @@ class TestBatisPlugin {
         logMapper.save(newLog);
         String newLogId = newLog.get("id").toString();
 
+        Assertions.assertTrue(newLogId.startsWith("BASIC-"), "key prefix invalid");
+
         Assertions.assertNotNull(newLogId, "uuid generated");
         Map<String, Object> inserted = logMapper.findOne(newLogId);
         Assertions.assertNotNull(inserted, "object should have been saved into db");
@@ -126,6 +128,10 @@ class TestBatisPlugin {
 
         ExampleDAO compare = expMapper.findOne(another.getEntityId());
         Assertions.assertEquals("etse", compare.getGroupName());
+
+        //todo Use PageBounds and object query may cause InvocationTargetException
+//        PageList<ExampleDAO> pageList2 = expMapper.pageList2(new ExampleDAO().setType(EntityType.EXC_1).setGroupName("foo"), new PageBounds(1, 10));
+//        Assertions.assertFalse(pageList2.isEmpty());
     }
 
     @Test

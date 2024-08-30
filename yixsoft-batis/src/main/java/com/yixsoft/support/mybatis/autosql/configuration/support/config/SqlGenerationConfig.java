@@ -44,6 +44,7 @@ public class SqlGenerationConfig {
     private final String tableName;
     private final String[] pkNames;
     private final Class<? extends KeyGenerator> pkProvider;
+    private final String pkPrefix;
     private final Configuration configuration;
     private final MapperFactoryBean parentFactory;
     private ISqlDialect dialect;
@@ -80,6 +81,7 @@ public class SqlGenerationConfig {
         } else {
             pkProvider = keyGeneratorType;
         }
+        pkPrefix = autoMapperConfig.keyPrefix();
         tableName = autoMapperConfig.tablename();
         Assert.isTrue(StringUtils.isNotEmpty(tableName), "Must provide tablename on statement " + statementName);
         resultType = MapperMethodUtils.getReturnType(method);
@@ -115,6 +117,7 @@ public class SqlGenerationConfig {
             provider.setConfiguration(configuration);
             provider.setPkNames(pkNames);
             provider.setPkProvider(pkProvider);
+            provider.setPkPrefix(pkPrefix);
             provider.setTable(tableName);
             provider.setTableColumns(tableColumns);
 
@@ -196,5 +199,9 @@ public class SqlGenerationConfig {
             }
         }
         return parameterType;
+    }
+
+    public String getPkPrefix() {
+        return pkPrefix;
     }
 }
