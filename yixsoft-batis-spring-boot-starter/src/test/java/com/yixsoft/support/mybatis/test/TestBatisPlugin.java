@@ -7,6 +7,7 @@ import com.yixsoft.support.mybatis.test.mappers.BasicLogMapper;
 import com.yixsoft.support.mybatis.test.mappers.ExampleAutoEntityMapper;
 import com.yixsoft.support.mybatis.test.mappers.ExampleEntityMapper;
 import com.yixsoft.support.mybatis.test.mappers.Log2Mapper;
+import org.apache.ibatis.session.RowBounds;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -16,10 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * validate plugin
@@ -132,6 +130,10 @@ class TestBatisPlugin {
         //todo Use PageBounds and object query may cause InvocationTargetException
 //        PageList<ExampleDAO> pageList2 = expMapper.pageList2(new ExampleDAO().setType(EntityType.EXC_1).setGroupName("foo"), new PageBounds(1, 10));
 //        Assertions.assertFalse(pageList2.isEmpty());
+
+        List<ExampleDAO> rnList = expMapper.rnList(Map.of("type",EntityType.EXC_1),new RowBounds(0,10));
+        Assertions.assertFalse(rnList.isEmpty());
+        Assertions.assertNotNull(rnList.get(0).getRn());
     }
 
     @Test

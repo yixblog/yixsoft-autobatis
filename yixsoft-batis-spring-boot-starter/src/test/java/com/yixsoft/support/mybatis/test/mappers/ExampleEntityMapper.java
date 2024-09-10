@@ -9,7 +9,10 @@ import com.yixsoft.support.mybatis.autosql.annotations.SqlType;
 import com.yixsoft.support.mybatis.test.ExampleAnotherDAO;
 import com.yixsoft.support.mybatis.test.ExampleDAO;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
+import java.lang.constant.Constable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,4 +37,7 @@ public interface ExampleEntityMapper {
 
     @AutoSql(SqlType.INSERT)
     void save(ExampleAnotherDAO another);
+
+    @AdvanceSelect(rowNumberColumns = "rn",rowNumberOvers = "order by create_time")
+    List<ExampleDAO> rnList(Map<String,Object> args, RowBounds rowBounds);
 }

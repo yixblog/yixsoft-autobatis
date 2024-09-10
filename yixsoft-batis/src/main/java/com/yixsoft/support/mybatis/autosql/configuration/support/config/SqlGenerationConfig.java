@@ -9,8 +9,8 @@ import com.yixsoft.support.mybatis.autosql.core.providers.UpdateSqlProvider;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.autosql.dialects.SqlDialectManager;
+import com.yixsoft.support.mybatis.autosql.dialects.entities.RowNumberConfig;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
-import com.yixsoft.support.mybatis.exceptions.MissingTableException;
 import com.yixsoft.support.mybatis.utils.MapperMethodUtils;
 import com.yixsoft.support.mybatis.utils.TypeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,8 +31,6 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +48,7 @@ public class SqlGenerationConfig {
     private ISqlDialect dialect;
     private final String[] excludeColumns;
     private final String addonWhereClause;
+    private final RowNumberConfig[] rowNumberConfigs;
     private final IgnoreNullRule ignoreNull;
     private final String[] staticUpdates;
     private final String statementId;
@@ -67,9 +66,23 @@ public class SqlGenerationConfig {
         if (advanceSelect != null) {
             excludeColumns = advanceSelect.excludeColumns();
             addonWhereClause = advanceSelect.addonWhereClause();
+            if (advanceSelect.rowNumberColumns().length != advanceSelect.rowNumberOvers().length) {
+                throw new AutoSqlException("rowNumberOvers must be same length with rowNumberColumns on %s".formatted(method));
+            }
+            rowNumberConfigs = new RowNumberConfig[advanceSelect.rowNumberColumns().length];
+            for (int i = 0; i < advanceSelect.rowNumberColumns().length; i++) {
+                if (StringUtils.isEmpty(advanceSelect.rowNumberColumns()[i])) {
+                    throw new AutoSqlException("rowNumberColumns must not be empty on %s".formatted(method));
+                }
+                if (StringUtils.isEmpty(advanceSelect.rowNumberOvers()[i])) {
+                    throw new AutoSqlException("rowNumberOvers must not be empty on %s".formatted(method));
+                }
+                rowNumberConfigs[i] = new RowNumberConfig(advanceSelect.rowNumberColumns()[i], advanceSelect.rowNumberOvers()[i]);
+            }
         } else {
             excludeColumns = null;
             addonWhereClause = "";
+            rowNumberConfigs = null;
         }
         AutoMapper autoMapperConfig = AnnotatedElementUtils.getMergedAnnotation(method.getDeclaringClass(), AutoMapper.class);
         Assert.notNull(autoMapperConfig, "AutoMapper config not found on method " + method);
@@ -123,13 +136,14 @@ public class SqlGenerationConfig {
 
             provider.setDialect(getDialect());
             provider.setParameter(parameterObject);
-            if (provider instanceof SelectSqlProvider) {
-                ((SelectSqlProvider) provider).setExcludeColumns(excludeColumns);
-                ((SelectSqlProvider) provider).setAddonWhereClause(addonWhereClause);
-            } else if (provider instanceof CountSqlProvider) {
-                ((CountSqlProvider) provider).setAddonWhereClause(addonWhereClause);
-            } else if (provider instanceof UpdateSqlProvider) {
-                ((UpdateSqlProvider) provider).setStaticUpdates(staticUpdates);
+            if (provider instanceof SelectSqlProvider selectProvider) {
+                selectProvider.setExcludeColumns(excludeColumns);
+                selectProvider.setAddonWhereClause(addonWhereClause);
+                selectProvider.setRowNumberConfigs(rowNumberConfigs);
+            } else if (provider instanceof CountSqlProvider countProvider) {
+                countProvider.setAddonWhereClause(addonWhereClause);
+            } else if (provider instanceof UpdateSqlProvider updateProvider) {
+                updateProvider.setStaticUpdates(staticUpdates);
             }
 
             return provider;

@@ -6,6 +6,7 @@ import java.util.Date;
  * Create by davep at 2020-02-25 2:40
  */
 public class ExampleDAO {
+    private Integer rn;
     private String entityId;
     private String groupName;
     private Date createTime;
@@ -77,6 +78,15 @@ public class ExampleDAO {
 
     public ExampleDAO setValid(Boolean valid) {
         isValid = valid;
+        return this;
+    }
+
+    public Integer getRn() {
+        return rn;
+    }
+
+    public ExampleDAO setRn(Integer rn) {
+        this.rn = rn;
         return this;
     }
 }

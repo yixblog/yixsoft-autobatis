@@ -29,4 +29,16 @@ public @interface AdvanceSelect {
 
     @AliasFor(value = "ignoreNullRule", annotation = AutoSql.class)
     IgnoreNullRule ignoreNullRule() default IgnoreNullRule.PARAM_TYPE_DETECT;
+
+    /**
+     * row_number() feature column name. several row_number() can be defined. Length must be equal to rowNumberOvers
+     * @return column name for row_number()
+     */
+    String[] rowNumberColumns() default {};
+
+    /**
+     * row_number() over clause. Length must be equal to rowNumberColumns
+     * @return over clause for row_number()
+     */
+    String[] rowNumberOvers() default {};
 }

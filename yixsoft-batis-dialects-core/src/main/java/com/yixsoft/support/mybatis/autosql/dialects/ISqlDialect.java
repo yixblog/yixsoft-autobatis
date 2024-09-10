@@ -1,6 +1,7 @@
 package com.yixsoft.support.mybatis.autosql.dialects;
 
 
+import com.yixsoft.support.mybatis.autosql.dialects.entities.RowNumberConfig;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 
 import java.util.List;
@@ -28,4 +29,11 @@ public interface ISqlDialect {
      * @return escaped name
      */
     String escapeKeyword(String name);
+
+    /**
+     * create row_number() fragment
+     * @param rowNumberConfig row number config
+     * @return sql piece
+     */
+    String rowNumberFragment(RowNumberConfig rowNumberConfig);
 }

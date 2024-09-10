@@ -126,6 +126,8 @@ public interface FooMapper{
 Like `@StaticUpdate`, it can replace `@AutoSql(SELECT)`. This annotation provides 2 extended configurations:
 - excludeColumns: If you do not want to select some columns such as blob/clob columns, secure columns in the auto generated select sql, you can use this config
 - addonWhereClause: You can add some where fragments in the auto generated select sql. it will concat generated where clauses with `AND`
+- rowNumberColumns: If you want to use row number in your select sql, you can use this config to determine the row number column name
+- rowNumberOvers: If you want to use row number in your select sql, you can use this config to determine the row number over clause
 
 #### @AdvancedPaginator, @CountRef, @CountSqlTpl
 These annotations are developed to upgrade com.github.meimeidev:mybatis-paginator. 

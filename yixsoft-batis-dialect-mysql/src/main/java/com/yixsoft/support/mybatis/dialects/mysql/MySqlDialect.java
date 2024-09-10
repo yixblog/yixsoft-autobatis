@@ -4,6 +4,7 @@ import com.mysql.cj.MysqlType;
 import com.yixsoft.support.mybatis.autosql.dialects.ColumnInfo;
 import com.yixsoft.support.mybatis.autosql.dialects.ISqlDialect;
 import com.yixsoft.support.mybatis.autosql.dialects.SupportsDatabase;
+import com.yixsoft.support.mybatis.autosql.dialects.entities.RowNumberConfig;
 import com.yixsoft.support.mybatis.autosql.dialects.exceptions.AutoSqlException;
 import com.yixsoft.support.mybatis.dialects.mysql.mappers.DescMySQLDAO;
 import com.yixsoft.support.mybatis.dialects.mysql.mappers.DescMySqlTableMapper;
@@ -62,6 +63,11 @@ public class MySqlDialect implements ISqlDialect {
     @Override
     public String escapeKeyword(String name) {
         return "`" + name + "`";
+    }
+
+    @Override
+    public String rowNumberFragment(RowNumberConfig rowNumberConfig) {
+        return "row_number() over (%s) as %s".formatted(rowNumberConfig.over(), rowNumberConfig.asColumn());
     }
 
 }
