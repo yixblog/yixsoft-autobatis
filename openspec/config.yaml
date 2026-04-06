@@ -1,0 +1,52 @@
+schema: spec-driven
+
+# Project context
+# This is shown to AI when creating artifacts.
+context: |
+  Tech stack: Java 17, MyBatis 3.5+, MyBatis-Spring 3.0+, Spring Boot 3.2+, Maven
+  Domain: MyBatis automatic SQL generation plugin
+  Project: yixsoft-autobatis
+  
+  核心特性：
+  - 注解驱动的SQL自动生成（@AutoMapper, @AutoSql等）
+  - 多数据库方言支持（MySQL, Oracle等）
+  - 智能参数处理（Map、JavaBean、数组/集合等）
+  - 主键自动生成（UUID、SnowFlake、自增等）
+  - WHERE条件智能构建（等值、IN、IS NULL等）
+  
+  架构层次：
+  - Spring Boot自动配置层（MapperConfiguration）
+  - MyBatis集成层（YixMapperFactoryBean）
+  - SQL生成引擎层（AutoSqlSource, IAutoSqlProvider）
+  - 方言系统层（ISqlDialect, SqlDialectManager）
+  
+  编码规范：
+  - 使用中文注释和文档
+  - 类名使用驼峰命名
+  - 接口以I开头（如IAutoSqlProvider）
+  - 抽象类以Abstract开头（如AbstractSqlProvider）
+  - 注解使用@Documented标注
+  
+  OpenSpec工作流程约定：
+  - 逐步确认原则：生成一个artifact → 暂停 → 等待开发者确认 → 继续
+  - 每次创建artifact后必须停止并显示当前进度
+  - 不自动连续创建多个artifact（除非明确进入快速模式）
+  - 遇到不确定内容时立即暂停询问开发者
+  - 开始代码实现前需开发者明确同意
+  - 详细约定见 .cursor/rules/openspec-workflow.md
+
+# Per-artifact rules
+rules:
+  proposal:
+    - 使用中文编写
+    - 包含功能说明、实现方案、影响范围、风险评估
+    - 明确非目标（Non-goals）
+  tasks:
+    - 每个任务控制在1-2小时工作量
+    - 明确任务输入、输出、验收标准
+    - 标注依赖关系和优先级
+  implementation:
+    - 遵循现有代码风格
+    - 保持向后兼容性
+    - 添加必要的单元测试
+    - 更新相关文档
