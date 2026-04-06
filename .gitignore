@@ -31,3 +31,9 @@ build/
 .cursor
 ### TRAE ###
 .trae
+
+### 本地测试配置 ###
+**/application-local.yml
+**/application-local.properties
+*.local.yml
+*.local.properties

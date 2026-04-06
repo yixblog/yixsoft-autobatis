@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    # 请修改以下连接参数
+    url: jdbc:postgresql://221.6.15.91:13307/batis-test
+    username: batis_test_dev
+    password: test-batis
+
+debug: true
+
+mybatis:
+  default-key-generator: com.yixsoft.support.mybatis.autosql.pk.UUIDPkProvider
+  configuration:
+    mapUnderscoreToCamelCase: true
+  dialects:
+    - com.yixsoft.support.mybatis.dialects.pg.PostgreSqlDialect
+  paginator:
+    enable: true
+    advanced-count: true
+    dialect: com.github.miemiedev.mybatis.paginator.dialect.PostgreSQLDialect
+  enable-strict-table-check: false
+
+logging:
+  level:
+    root: debug
+    java:
+      sql:
+        Connection: debug
+        Statement: debug
+        PreparedStatement: debug
